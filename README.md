@@ -23,34 +23,23 @@ This branch contains flatpak packaging files
 #### Add flathub repo
 
 ```bash
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak remote-add [--user] --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 ```
 
 #### Install dependencies
 
 ```bash
-flatpak install [--user] flathub org.gnome.Platform//3.28
-flatpak install [--user] flathub org.freedesktop.Platform//1.6
-flatpak install [--user] flathub org.freedesktop.Platform.GL
-flatpak install [--user] flathub org.freedesktop.Platform.GL32
-flatpak install [--user] flathub io.elementary.Loki.BaseApp//stable
-flatpak install [--user] flathub org.gnome.Sdk//3.28
-flatpak update [--user]
+flatpak-builder --install-deps-from=flathub --install-deps-only [--user] build com.github.tkashkin.gamehub.json
+flatpak update
 ```
 
 #### Build
 
 ```bash
-git clone https://github.com/tkashkin/GameHub.git --branch flatpak
+git clone https://github.com/tkashkin/GameHub.git --branch flatpak --recursive
 cd GameHub
-flatpak-builder --ccache --repo=repo --force-clean build com.github.tkashkin.gamehub.json
-flatpak remote-add --if-not-exists --no-gpg-verify gamehub repo
-```
-
-#### Install
-
-```bash
-flatpak install [--user] gamehub com.github.tkashkin.gamehub
+flatpak-builder --install [--user] --ccache --repo=repo --force-clean build com.github.tkashkin.gamehub.json
+flatpak remote-add [--user] --if-not-exists --no-gpg-verify gamehub repo
 ```
 
 #### Run

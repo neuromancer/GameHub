@@ -21,6 +21,7 @@
 		"--talk-name=org.gnome.SettingsDaemon",
 		"--talk-name=org.freedesktop.NetworkManager",
 		"--talk-name=org.kde.StatusNotifierWatcher",
+		"--socket=session-bus",
 		
 		"--persist=.",
 		"--device=all",
@@ -45,10 +46,7 @@
 		"--filesystem=~/.config/dconf:ro",
 		"--env=DCONF_USER_CONFIG_DIR=.config/dconf",
 		
-		"--filesystem=home",
-		"--filesystem=/mnt",
-		"--filesystem=/media",
-		"--filesystem=/run/media"
+		"--filesystem=host"
 	],
 	"cleanup": [
 		"/include",
@@ -60,7 +58,7 @@
 		"/share/vala",
 		"/share/gtk-doc"
 	],
-	"modules": [		
+	"modules": [
 		{
 			"name": "gamehub",
 			"buildsystem": "meson",
@@ -72,12 +70,18 @@
 			"sources": [
 				{
 					"type": "git",
+					"path": "../GameHub",
+					"branch": "master"
+				},
+				{
+					"type": "git",
 					"url": "https://github.com/tkashkin/GameHub.git",
 					"branch": "master"
 				}
 			]
-		},		
+		},
 		
+		"bin/bin.json",
 		"libs/libs.json"
 	]
 }
