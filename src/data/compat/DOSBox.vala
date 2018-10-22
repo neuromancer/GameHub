@@ -28,6 +28,7 @@ namespace GameHub.Data.Compat
 
 		private File conf_windowed;
 		private CompatTool.Option? opt_windowed;
+                private ArrayList<ArrayList<string>> multi_config; 
 
 		public DOSBox(string binary="dosbox")
 		{
@@ -39,6 +40,7 @@ namespace GameHub.Data.Compat
 			id = @"dosbox";
 			name = @"DOSBox";
 			icon = "tool-dosbox-symbolic";
+                        multi_config = new ArrayList<ArrayList<string>>();
 
 			executable = Utils.find_executable(binary);
 			installed = executable != null && executable.query_exists();
@@ -97,23 +99,48 @@ namespace GameHub.Data.Compat
 
 		public override bool can_run(Game game)
 		{
-			return installed && find_configs(game.install_dir).size > 0;
+                        var configs = find_configs(game.install_dir);
+                        var has_configs = configs.size > 0;
+                        if (has_configs) {
+                            warning("Found dir %s with dosbox conf", game.install_dir.get_path());       
+                            multi_config.add(configs);
+                        }
+                       	FileInfo? finfo = null;
+			var enumerator = game.install_dir.enumerate_children("standard::*", FileQueryInfoFlags.NOFOLLOW_SYMLINKS);
+			while((finfo = enumerator.next_file()) != null)
+			{
+                          if (finfo.get_file_type () == FileType.DIRECTORY) {
+                              File subdir = game.install_dir.resolve_relative_path (finfo.get_name ());
+                              configs = find_configs(subdir);
+                              has_configs = has_configs || configs.size > 0; 
+
+                              if (configs.size > 0) {
+                                  warning("Found dir %s with dosbox conf", subdir.get_path()); 
+                                  multi_config.add(configs);
+                              }
+ 
+                          }
+                        }
+	
+			return installed && has_configs;
 		}
 
 		public override async void run(Game game)
 		{
 			if(!can_run(game)) return;
+                        warning("multi_config size %d", multi_config.size);
 
 			string[] cmd = { executable.get_path() };
 
 			var wdir = game.install_dir;
 
-			var configs = find_configs(game.install_dir);
-
+			var configs = multi_config.get(0); // select some configs
+                        
 			if(configs.size > 2 && game is GameHub.Data.Sources.GOG.GOGGame)
 			{
 				foreach(var conf in configs)
 				{
+                                        warning("Found .conf file: %s", conf); 
 					if(conf.has_suffix("_single.conf"))
 					{
 						configs.clear();
