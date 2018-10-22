@@ -1,13 +1,9 @@
-version: 0.11.3-{build}-{branch}
+version: 0.11.5-{build}-{branch}
 
 pull_requests:
   do_not_increment_build_number: true
 
 skip_tags: true
-
-branches:
-  except:
-    - flatpak
 
 image:
   - Ubuntu1804

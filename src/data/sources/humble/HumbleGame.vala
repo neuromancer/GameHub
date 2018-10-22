@@ -81,6 +81,7 @@ namespace GameHub.Data.Sources.Humble
 			compat_tool = Tables.Games.COMPAT_TOOL.get(s);
 			compat_tool_settings = Tables.Games.COMPAT_TOOL_SETTINGS.get(s);
 			arguments = Tables.Games.ARGUMENTS.get(s);
+			last_launch = Tables.Games.LAST_LAUNCH.get_int64(s);
 
 			platforms.clear();
 			var pls = Tables.Games.PLATFORMS.get(s).split(",");
@@ -229,7 +230,7 @@ namespace GameHub.Data.Sources.Humble
 
 					if(refresh && !game_info_refreshed)
 					{
-						debug("[HumbleGame.update_game_info] Refreshing");
+						//debug("[HumbleGame.update_game_info] Refreshing");
 						game_info_refreshed = true;
 						game_info_updated = false;
 						installers.clear();
@@ -333,9 +334,9 @@ namespace GameHub.Data.Sources.Humble
 			{
 				if(!(game.source is Trove) || !is_url_update_required()) return null;
 
-				debug("[HumbleGame.Installer.update_url] Old URL: '%s'; (%s)", part.url, game.full_id);
+				//debug("[HumbleGame.Installer.update_url] Old URL: '%s'; (%s)", part.url, game.full_id);
 				var new_url = Trove.sign_url(id, dl_id, ((Humble) game.source).user_token);
-				debug("[HumbleGame.Installer.update_url] New URL: '%s'; (%s)", new_url, game.full_id);
+				//debug("[HumbleGame.Installer.update_url] New URL: '%s'; (%s)", new_url, game.full_id);
 
 				if(new_url != null) part.url = new_url;
 

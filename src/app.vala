@@ -53,13 +53,24 @@ namespace GameHub
 
 			GameSources = { new Steam(), new GOG(), new Humble(), new Trove(), new User() };
 
-			CompatTool[] tools = { new Compat.CustomScript(), new Compat.Innoextract(), new Compat.DOSBox() };
+			CompatTool[] tools = { new Compat.CustomScript(), new Compat.Innoextract(), new Compat.DOSBox(), new Compat.RetroArch() };
 			foreach(var appid in Compat.Proton.APPIDS)
 			{
 				tools += new Compat.Proton(appid);
 			}
-			tools += new Compat.Wine("wine64");
-			tools += new Compat.Wine("wine");
+
+			string[] wine_binaries = { "wine"/*, "wine64", "wine32"*/ };
+			string[] wine_arches = { "win64", "win32" };
+
+			foreach(var wine_binary in wine_binaries)
+			{
+				foreach(var wine_arch in wine_arches)
+				{
+					if(wine_binary == "wine32" && wine_arch == "win64") continue;
+					tools += new Compat.Wine(wine_binary, wine_arch);
+				}
+			}
+
 			CompatTools = tools;
 
 			weak IconTheme default_theme = IconTheme.get_default();
@@ -69,11 +80,19 @@ namespace GameHub
 			provider.load_from_resource("/com/github/tkashkin/gamehub/GameHub.css");
 			StyleContext.add_provider_for_screen(Screen.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
 
+			#if MANETTE
+			GameHub.Utils.Gamepad.init();
+			#endif
+
 			new GameHub.UI.Windows.MainWindow(this).show_all();
 		}
 
 		public static int main(string[] args)
 		{
+			#if MANETTE
+			X.init_threads();
+			#endif
+
 			var app = new Application();
 
 			var lang = Environment.get_variable("LC_ALL") ?? "";

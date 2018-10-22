@@ -34,6 +34,9 @@ namespace GameHub.Utils
 				public string gog_games { get; set; }
 				public string humble_games { get; set; }
 
+				public string libretro_core_dir { get; set; }
+				public string libretro_core_info_dir { get; set; }
+
 				public Settings()
 				{
 					base(ProjectConfig.PROJECT_NAME + ".paths");
@@ -66,11 +69,11 @@ namespace GameHub.Utils
 				{
 					owned get
 					{
-						#if FLATPAK
+						/*#if FLATPAK
 						return "/home/" + Environment.get_user_name() + "/.var/app/com.valvesoftware.Steam/.steam";
-						#else
+						#else*/
 						return FSUtils.Paths.Settings.get_instance().steam_home;
-						#endif
+						//#endif
 					}
 				}
 				public static string Config { owned get { return FSUtils.Paths.Steam.Home + "/steam/config"; } }
@@ -86,11 +89,11 @@ namespace GameHub.Utils
 				{
 					owned get
 					{
-						#if FLATPAK
+						/*#if FLATPAK
 						return Environment.get_user_data_dir() + "/games/GOG";
-						#else
+						#else*/
 						return FSUtils.Paths.Settings.get_instance().gog_games;
-						#endif
+						//#endif
 					}
 				}
 			}
@@ -101,11 +104,11 @@ namespace GameHub.Utils
 				{
 					owned get
 					{
-						#if FLATPAK
+						/*#if FLATPAK
 						return Environment.get_user_data_dir() + "/games/HumbleBundle";
-						#else
+						#else*/
 						return FSUtils.Paths.Settings.get_instance().humble_games;
-						#endif
+						//#endif
 					}
 				}
 			}
@@ -294,6 +297,22 @@ namespace GameHub.Utils
 		{
 			mkdir(FSUtils.Paths.Cache.Home);
 			mkdir(FSUtils.Paths.Cache.Images);
+
+			#if FLATPAK
+			var paths = Paths.Settings.get_instance();
+			if(paths.steam_home == paths.schema.get_default_value("steam-home").get_string())
+			{
+				paths.steam_home = "/home/" + Environment.get_user_name() + "/.var/app/com.valvesoftware.Steam/.steam";
+			}
+			if(paths.gog_games == paths.schema.get_default_value("gog-games").get_string())
+			{
+				paths.gog_games = Environment.get_user_data_dir() + "/games/GOG";
+			}
+			if(paths.humble_games == paths.schema.get_default_value("humble-games").get_string())
+			{
+				paths.humble_games = Environment.get_user_data_dir() + "/games/HumbleBundle";
+			}
+			#endif
 
 			FSUtils.rm(FSUtils.Paths.Collection.GOG.expand_installers("*"), ".goutputstream-*");
 			FSUtils.rm(FSUtils.Paths.Collection.Humble.expand_installers("*"), ".goutputstream-*");

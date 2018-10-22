@@ -40,6 +40,8 @@ namespace GameHub.Data.Sources.User
 			install_dir = dir;
 			executable = exec;
 			arguments = args;
+
+			((User) source).add_game(this);
 			update_status();
 		}
 
@@ -57,6 +59,7 @@ namespace GameHub.Data.Sources.User
 			compat_tool = Tables.Games.COMPAT_TOOL.get(s);
 			compat_tool_settings = Tables.Games.COMPAT_TOOL_SETTINGS.get(s);
 			arguments = Tables.Games.ARGUMENTS.get(s);
+			last_launch = Tables.Games.LAST_LAUNCH.get_int64(s);
 
 			platforms.clear();
 			var pls = Tables.Games.PLATFORMS.get(s).split(",");
@@ -105,8 +108,8 @@ namespace GameHub.Data.Sources.User
 		public void remove()
 		{
 			is_removed = true;
+			((User) source).remove_game(this);
 			removed();
-			Tables.Games.remove(this);
 		}
 
 		public override void save()

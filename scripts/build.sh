@@ -1,27 +1,40 @@
 #!/bin/bash
 
-_GH_VERSION="0.11.3"
+_GH_RDNN="com.github.tkashkin.gamehub"
+_GH_VERSION="0.11.5"
+
+_GH_BRANCH="${APPVEYOR_REPO_BRANCH:-$(git symbolic-ref --short -q HEAD)}"
 
 _ROOT="`pwd`"
 _SCRIPTROOT="$(dirname "$(readlink -f "$0")")"
 _LINUXDEPLOYQT="linuxdeployqt-continuous-x86_64.AppImage"
 
-_SOURCE="${APPVEYOR_BUILD_VERSION:-$_GH_VERSION-local}"
+_SOURCE="${APPVEYOR_BUILD_VERSION:-$_GH_VERSION-$_GH_BRANCH-local}"
 _VERSION="$_SOURCE-$(git rev-parse --short HEAD)"
 _DEB_VERSION="${APPVEYOR_BUILD_VERSION:-$_VERSION}"
 _DEB_TARGET_DISTRO="bionic"
 _BUILD_IMAGE="local"
+_GPG_BINARY="gpg1"
+_GPG_PACKAGE="gnupg1"
+
+export CFLAGS=-O0
+export CPPFLAGS=-O0
+export CXXFLAGS=-O0
 
 if [[ "$APPVEYOR_BUILD_WORKER_IMAGE" = "Ubuntu1604" ]]; then
 	_VERSION="xenial-$_VERSION"
 	_DEB_VERSION="$_DEB_VERSION~ubuntu16.04"
 	_DEB_TARGET_DISTRO="xenial"
 	_BUILD_IMAGE="xenial"
+	_GPG_BINARY="gpg"
+	_GPG_PACKAGE="gnupg"
 elif [[ "$APPVEYOR_BUILD_WORKER_IMAGE" = "Ubuntu1804" ]]; then
 	_VERSION="bionic-$_VERSION"
 	_DEB_VERSION="$_DEB_VERSION~ubuntu18.04"
 	_DEB_TARGET_DISTRO="bionic"
 	_BUILD_IMAGE="bionic"
+	_GPG_BINARY="gpg1"
+	_GPG_PACKAGE="gnupg1"
 fi
 
 BUILDROOT="$_ROOT/build/appimage"
@@ -64,15 +77,15 @@ import_keys()
 	cd "$_ROOT"
 	if [[ -n "$keys_enc_secret" ]]; then
 		echo "[scripts/build.sh] Importing keys"
-		sudo apt install -y gnupg1
+		sudo apt install -y "$_GPG_PACKAGE"
 		curl -sflL "https://raw.githubusercontent.com/appveyor/secure-file/master/install.sh" | bash -e -
 		./appveyor-tools/secure-file -decrypt "$_SCRIPTROOT/launchpad/key_pub.gpg.enc" -secret $keys_enc_secret
 		./appveyor-tools/secure-file -decrypt "$_SCRIPTROOT/launchpad/key_sec.gpg.enc" -secret $keys_enc_secret
 		./appveyor-tools/secure-file -decrypt "$_SCRIPTROOT/launchpad/passphrase.enc" -secret $keys_enc_secret
-		gpg1 --no-use-agent --import "$_SCRIPTROOT/launchpad/key_pub.gpg"
-		gpg1 --no-use-agent --allow-secret-key-import --import "$_SCRIPTROOT/launchpad/key_sec.gpg"
+		"$_GPG_BINARY" --no-use-agent --import "$_SCRIPTROOT/launchpad/key_pub.gpg"
+		"$_GPG_BINARY" --no-use-agent --allow-secret-key-import --import "$_SCRIPTROOT/launchpad/key_sec.gpg"
 		sudo apt-key add "$_SCRIPTROOT/launchpad/key_pub.gpg"
-		rm "$_SCRIPTROOT/launchpad/key_pub.gpg" "$_SCRIPTROOT/launchpad/key_sec.gpg"
+		rm -f "$_SCRIPTROOT/launchpad/key_pub.gpg" "$_SCRIPTROOT/launchpad/key_sec.gpg"
 	fi
 }
 
@@ -85,34 +98,38 @@ deps()
 	sudo add-apt-repository ppa:elementary-os/daily -y
 	sudo add-apt-repository ppa:vala-team/next -y
 	sudo apt update -qq
-	if [[ "$_BUILD_IMAGE" = "bionic" ]]; then
-		sudo apt install -y libwebkit2gtk-4.0-\*=2.20.1-1 libjavascriptcoregtk-4.0-\*=2.20.1-1 gir1.2-webkit2-4.0=2.20.1-1 gir1.2-javascriptcoregtk-4.0=2.20.1-1
-	else
-		sudo apt install -y libwebkit2gtk-4.0-dev
-	fi
-	sudo apt install -y meson valac checkinstall build-essential dput elementary-sdk libgranite-dev libgtk-3-dev libglib2.0-dev libjson-glib-dev libgee-0.8-dev libsoup2.4-dev libsqlite3-dev libxml2-dev
+	sudo apt install -y meson valac checkinstall build-essential dput elementary-sdk libgranite-dev libgtk-3-dev libglib2.0-dev libwebkit2gtk-4.0-dev libjson-glib-dev libgee-0.8-dev libsoup2.4-dev libsqlite3-dev libxml2-dev
 	#sudo apt full-upgrade -y
 	if [[ "$APPVEYOR_BUILD_WORKER_IMAGE" = "Ubuntu1604" ]]; then
 		sudo dpkg -i "$_SCRIPTROOT/deps/xenial/"*.deb
+	else
+		sudo apt install -y libmanette-0.2-dev libxtst-dev libx11-dev
 	fi
 }
 
 build_deb()
 {
 	set -e
-	echo "[scripts/build.sh] Building deb package"
 	cd "$_ROOT"
 	sed "s/\$VERSION/$_DEB_VERSION/g; s/\$DISTRO/$_DEB_TARGET_DISTRO/g; s/\$DATE/`date -R`/g" "debian/changelog.in" > "debian/changelog"
-	export DEB_BUILD_OPTIONS="nostrip nocheck"
+	if [[ "$APPVEYOR_BUILD_WORKER_IMAGE" = "Ubuntu1604" ]]; then
+		sed "s/libmanette-0.2-dev,//g" "debian/control.in" > "debian/control"
+	else
+		cp -f "debian/control.in" "debian/control"
+	fi
+	export DEB_BUILD_OPTIONS="noopt nostrip nocheck"
 	if [[ -e "$_SCRIPTROOT/launchpad/passphrase" && -n "$keys_enc_secret" ]]; then
+		echo "[scripts/build.sh] Building source package for launchpad"
 		dpkg-buildpackage -S -sa -us -uc
 		set +e
-		debsign -p"gpg1 --no-use-agent --passphrase-file $_SCRIPTROOT/launchpad/passphrase --batch" -S -k2744E6BAF20BA10AAE92253F20442B9273408FF9 ../*.changes
-		rm "$_SCRIPTROOT/launchpad/passphrase"
+		echo "[scripts/build.sh] Signing source package"
+		debsign -p"$_GPG_BINARY --no-use-agent --passphrase-file $_SCRIPTROOT/launchpad/passphrase --batch" -S -k2744E6BAF20BA10AAE92253F20442B9273408FF9 ../*.changes
+		rm -f "$_SCRIPTROOT/launchpad/passphrase"
 		echo "[scripts/build.sh] Uploading package to launchpad"
 		dput -u -c "$_SCRIPTROOT/launchpad/dput.cf" "gamehub_$_DEB_TARGET_DISTRO" ../*.changes
 		set -e
 	fi
+	echo "[scripts/build.sh] Building deb package"
 	dpkg-buildpackage -us -uc
 	mkdir -p "build/$_BUILD_IMAGE"
 	cp ../*.deb "build/$_BUILD_IMAGE/GameHub-$_VERSION-amd64.deb"
@@ -125,7 +142,7 @@ build()
 	echo "[scripts/build.sh] Building"
 	cd "$_ROOT"
 	mkdir -p "$BUILDROOT"
-	meson "$BUILDDIR" --prefix=/usr --buildtype=debugoptimized -Ddistro=generic -Dappimage=true
+	meson "$BUILDDIR" --prefix=/usr --buildtype=debug -Ddistro=generic -Dappimage=true
 	cd "$BUILDDIR"
 	ninja
 	DESTDIR="$APPDIR" ninja install
@@ -142,7 +159,7 @@ appimage()
 	unset QTDIR; unset QT_PLUGIN_PATH; unset LD_LIBRARY_PATH
 	export VERSION="$_VERSION"
 	export LD_LIBRARY_PATH=$APPDIR/usr/lib:$LD_LIBRARY_PATH
-	"./$_LINUXDEPLOYQT" "$APPDIR/usr/share/applications/com.github.tkashkin.gamehub.desktop" -appimage -no-plugins -no-copy-copyright-files -verbose=2
+	"./$_LINUXDEPLOYQT" "$APPDIR/usr/share/applications/$_GH_RDNN.desktop" -appimage -no-plugins -no-copy-copyright-files -verbose=2
 }
 
 appimage_tweak()
@@ -223,17 +240,25 @@ build_flatpak()
 	set +e
 	echo "[scripts/build.sh] Building flatpak package"
 	mkdir -p "$_ROOT/build/flatpak"
-	cd "$_ROOT/build/flatpak"
+	cd "$_ROOT/flatpak"
+	echo "[scripts/build.sh] Installing flatpak"
 	sudo apt install -y flatpak flatpak-builder
-	sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-	git clone https://github.com/tkashkin/GameHub.git --branch flatpak --recursive --depth=1 "manifest"
-	cd "manifest"
-	sudo flatpak-builder -y --install-deps-from=flathub --install-deps-only build com.github.tkashkin.gamehub.json
-	sudo flatpak update -y
-	sudo flatpak-builder -y --repo=repo --force-clean build com.github.tkashkin.gamehub.json
-	sudo flatpak build-bundle repo "$_ROOT/build/flatpak/GameHub-$_VERSION.flatpak" com.github.tkashkin.gamehub
+	flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+	sed "s/\$BRANCH/$_GH_BRANCH/g" "$_GH_RDNN.json.in" > "$_GH_RDNN.json"
+	echo "[scripts/build.sh] Autoinstalling dependencies"
+	flatpak-builder -y --user --install-deps-from=flathub --install-deps-only "$_ROOT/build/flatpak/build" "$_GH_RDNN.json"
+	echo "[scripts/build.sh] Building"
+	flatpak-builder -y --user --repo="$_ROOT/build/flatpak/repo" --force-clean "$_ROOT/build/flatpak/build" "$_GH_RDNN.json"
+	echo "[scripts/build.sh] Building bundle"
+	flatpak build-bundle "$_ROOT/build/flatpak/repo" "$_ROOT/build/flatpak/GameHub-$_VERSION.flatpak" "$_GH_RDNN"
+	echo "[scripts/build.sh] Removing flatpak build and repo directories"
+	rm -rf ".flatpak-builder" "$_ROOT/build/flatpak/build" "$_ROOT/build/flatpak/repo"
+	return 0
 }
 
+set +e
+cd "$_ROOT"
+git submodule update --init
 mkdir -p "$BUILDROOT"
 
 if [[ "$ACTION" = "import_keys" ]]; then import_keys; fi
@@ -250,4 +275,4 @@ if [[ "$ACTION" = "appimage_bundle_libs" || "$ACTION" = "build_local" ]]; then a
 if [[ "$ACTION" = "appimage_checkrt" || ( "$ACTION" = "build_local" && "$CHECKRT" = "--checkrt" ) ]]; then appimage_checkrt; fi
 if [[ "$ACTION" = "appimage_pack" || "$ACTION" = "build_local" ]]; then appimage_pack; fi
 
-if [[ "$ACTION" = "build_flatpak" && "$_BUILD_IMAGE" = "bionic" ]]; then build_flatpak; fi
+if [[ "$ACTION" = "build_flatpak" && ! "$_BUILD_IMAGE" = "xenial" ]]; then build_flatpak; fi

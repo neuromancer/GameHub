@@ -24,29 +24,30 @@ namespace GameHub.Data.Compat
 {
 	public class Wine: CompatTool
 	{
-		public string? binary { get; construct; default = "wine"; }
                 protected virtual string install_postfix() { return "/_gamehub/"+binary+"/drive_c/Game"; }
+		public string binary { get; construct; default = "wine"; }
+		public string arch { get; construct; default = "win64"; }
 		public File? wine_binary { get; protected set; }
 
-		public Wine(string binary="wine")
+		public Wine(string binary="wine", string arch="win64")
 		{
-			Object(binary: binary);
+			Object(binary: binary, arch: arch);
 		}
 
 		construct
 		{
-			id = @"wine_$(binary)";
-			name = @"Wine ($(binary))";
+			id = @"wine_$(binary)_$(arch)";
+			name = @"Wine ($(binary)) [arch: $(arch)]";
 			icon = "tool-wine-symbolic";
 
 			executable = wine_binary = Utils.find_executable(binary);
 			installed = executable != null && executable.query_exists();
 
 			install_options = {
-				new CompatTool.Option("/SILENT", _("Silent installation"), false),
-				new CompatTool.Option("/VERYSILENT", _("Very silent installation"), true),
-				new CompatTool.Option("/SUPPRESSMSGBOXES", _("Suppress messages"), true),
-				new CompatTool.Option("/NOGUI", _("No GUI"), true)
+				new CompatTool.BoolOption("/SILENT", _("Silent installation"), false),
+				new CompatTool.BoolOption("/VERYSILENT", _("Very silent installation"), true),
+				new CompatTool.BoolOption("/SUPPRESSMSGBOXES", _("Suppress messages"), true),
+				new CompatTool.BoolOption("/NOGUI", _("No GUI"), true)
 			};
 
 			if(installed)
@@ -85,7 +86,7 @@ namespace GameHub.Data.Compat
 
 			foreach(var opt in install_options)
 			{
-				if(opt.enabled)
+				if(opt is CompatTool.BoolOption && ((CompatTool.BoolOption) opt).enabled)
 				{
 					opts += opt.name;
 				}
@@ -118,7 +119,7 @@ namespace GameHub.Data.Compat
 
 		protected virtual File get_wineprefix(Game game)
 		{
-			return FSUtils.mkdir(game.install_dir.get_path(), @"$(COMPAT_DATA_DIR)/$(binary)");
+			return FSUtils.mkdir(game.install_dir.get_path(), @"$(COMPAT_DATA_DIR)/$(binary)_$(arch)");
 		}
 
 		public override File get_install_root(Game game)
@@ -129,13 +130,16 @@ namespace GameHub.Data.Compat
 		protected virtual string[] prepare_env(Game game, bool parse_opts=true)
 		{
 			var env = Environ.get();
-
+			env = Environ.set_variable(env, "WINEDLLOVERRIDES", "mshtml=d");
 			var prefix = get_wineprefix(game);
 			if(prefix != null && prefix.query_exists())
 			{
 				env = Environ.set_variable(env, "WINEPREFIX", prefix.get_path());
 			}
-			env = Environ.set_variable(env, "WINEDLLOVERRIDES", "mshtml=d");
+			if(arch != null)
+			{
+				env = Environ.set_variable(env, "WINEARCH", "mshtml=d");
+			}
 
 			return env;
 		}
@@ -144,12 +148,17 @@ namespace GameHub.Data.Compat
 		{
 			var env = Environ.get();
 			env = Environ.set_variable(env, "WINE", wine_binary.get_path());
+			env = Environ.set_variable(env, "WINEDLLOVERRIDES", "mshtml=d");
 			var prefix = wineprefix ?? get_wineprefix(game);
 			if(prefix != null && prefix.query_exists())
 			{
 				env = Environ.set_variable(env, "WINEPREFIX", prefix.get_path());
 			}
 			env = Environ.set_variable(env, "WINEDLLOVERRIDES", "mshtml=d");
+			if(arch != null)
+			{
+				env = Environ.set_variable(env, "WINEARCH", "mshtml=d");
+			}
 
 			yield Utils.run_thread({ wine_binary.get_path(), util }, game.install_dir.get_path(), env);
 		}
@@ -158,12 +167,17 @@ namespace GameHub.Data.Compat
 		{
 			var env = Environ.get();
 			env = Environ.set_variable(env, "WINE", wine_binary.get_path());
+			env = Environ.set_variable(env, "WINEDLLOVERRIDES", "mshtml=d");
 			var prefix = wineprefix ?? get_wineprefix(game);
 			if(prefix != null && prefix.query_exists())
 			{
 				env = Environ.set_variable(env, "WINEPREFIX", prefix.get_path());
 			}
 			env = Environ.set_variable(env, "WINEDLLOVERRIDES", "mshtml=d");
+			if(arch != null)
+			{
+				env = Environ.set_variable(env, "WINEARCH", "mshtml=d");
+			}
 
 			yield Utils.run_thread({ "winetricks" }, game.install_dir.get_path(), env);
 		}
@@ -172,12 +186,17 @@ namespace GameHub.Data.Compat
 		{
 			var env = Environ.get();
 			env = Environ.set_variable(env, "WINE", wine_binary.get_path());
+			env = Environ.set_variable(env, "WINEDLLOVERRIDES", "mshtml=d");
 			var prefix = get_wineprefix(game);
 			if(prefix != null && prefix.query_exists())
 			{
 				env = Environ.set_variable(env, "WINEPREFIX", prefix.get_path());
 			}
 			env = Environ.set_variable(env, "WINEDLLOVERRIDES", "mshtml=d");
+			if(arch != null)
+			{
+				env = Environ.set_variable(env, "WINEARCH", "mshtml=d");
+			}
 
 			var win_path = (yield Utils.run_thread({ wine_binary.get_path(), "winepath", "-w", path.get_path() + s}, game.install_dir.get_path(), env)).strip();
 			debug("'%s' -> '%s'", path.get_path(), win_path);
