@@ -54,6 +54,7 @@ namespace GameHub.UI.Views.GamesView
 
 		private Granite.Widgets.OverlayBar status_overlay;
 		private string? status_text;
+		private bool status_changed = false;
 
 		private bool new_games_added = false;
 
@@ -79,7 +80,7 @@ namespace GameHub.UI.Views.GamesView
 
 		#if MANETTE
 		private Manette.Monitor manette_monitor = new Manette.Monitor();
-		private bool gamepad_connected = false;
+		private ArrayList<Manette.Device> connected_gamepads = new ArrayList<Manette.Device>();
 		private bool gamepad_axes_to_keys_thread_running = false;
 		private ArrayList<Widget> gamepad_mode_visible_widgets = new ArrayList<Widget>();
 		private ArrayList<Widget> gamepad_mode_hidden_widgets = new ArrayList<Widget>();
@@ -433,7 +434,7 @@ namespace GameHub.UI.Views.GamesView
 			var games = src == null ? games_grid.get_children().length() : src.games_count;
 			titlebar.subtitle = (src == null ? "" : src.name + ": ") + ngettext("%u game", "%u games", games).printf(games);
 
-			if(loading_sources.size > 0)
+			if(status_changed && loading_sources.size > 0)
 			{
 				string[] src_names = {};
 				foreach(var s in loading_sources)
@@ -454,6 +455,8 @@ namespace GameHub.UI.Views.GamesView
 				status_overlay.active = false;
 				status_overlay.hide();
 			}
+
+			status_changed = false;
 
 			foreach(var s in sources)
 			{
@@ -581,10 +584,13 @@ namespace GameHub.UI.Views.GamesView
 			foreach(var src in sources)
 			{
 				loading_sources.add(src);
+				status_changed = true;
 				src.load_games.begin(add_game, postpone_view_update, (obj, res) => {
 					src.load_games.end(res);
 
 					loading_sources.remove(src);
+
+					status_changed = true;
 
 					if(loading_sources.size == 0)
 					{
@@ -726,7 +732,8 @@ namespace GameHub.UI.Views.GamesView
 
 				if(filters_popover.sort_mode == Settings.SortMode.LAST_LAUNCH)
 				{
-					return (int) (game1.last_launch - game2.last_launch);
+					if(game1.last_launch > game2.last_launch) return -1;
+					if(game1.last_launch < game2.last_launch) return 1;
 				}
 
 				return game1.name.collate(game2.name);
@@ -810,6 +817,7 @@ namespace GameHub.UI.Views.GamesView
 		{
 			if(in_destruction()) return;
 			status_text = _("Updating game info");
+			status_changed = true;
 			postpone_view_update();
 			Utils.thread("Updating", () => {
 				foreach(var src in sources)
@@ -821,6 +829,7 @@ namespace GameHub.UI.Views.GamesView
 					}
 				}
 				status_text = null;
+				status_changed = true;
 				postpone_view_update();
 			});
 		}
@@ -829,6 +838,7 @@ namespace GameHub.UI.Views.GamesView
 		{
 			if(!ui_settings.merge_games || in_destruction()) return;
 			status_text = _("Merging games");
+			status_changed = true;
 			postpone_view_update();
 			Utils.thread("Merging", () => {
 				foreach(var src in sources)
@@ -836,6 +846,7 @@ namespace GameHub.UI.Views.GamesView
 					merge_games_from(src);
 				}
 				status_text = null;
+				status_changed = true;
 				postpone_view_update();
 			});
 		}
@@ -843,6 +854,7 @@ namespace GameHub.UI.Views.GamesView
 		private void merge_games_from(GameSource src)
 		{
 			status_text = _("Merging games from %s").printf(src.name);
+			status_changed = true;
 			postpone_view_update();
 			Utils.thread("Merging-" + src.id, () => {
 				foreach(var game in src.games)
@@ -850,6 +862,7 @@ namespace GameHub.UI.Views.GamesView
 					merge_game(game);
 				}
 				status_text = null;
+				status_changed = true;
 				postpone_view_update();
 			});
 		}
@@ -858,6 +871,7 @@ namespace GameHub.UI.Views.GamesView
 		{
 			if(!ui_settings.merge_games || in_destruction() || game is Sources.GOG.GOGGame.DLC) return;
 			status_text = _("Merging %s (%s)").printf(game.name, game.full_id);
+			status_changed = true;
 			postpone_view_update();
 			Utils.thread("Merging-" + game.full_id, () => {
 				foreach(var src in sources)
@@ -868,6 +882,7 @@ namespace GameHub.UI.Views.GamesView
 					}
 				}
 				status_text = null;
+				status_changed = true;
 				postpone_view_update();
 			});
 		}
@@ -900,46 +915,39 @@ namespace GameHub.UI.Views.GamesView
 		}
 
 		#if MANETTE
+		private void ui_update_gamepad_mode()
+		{
+			Idle.add(() => {
+				var is_gamepad_connected = connected_gamepads.size > 0;
+				var widgets_to_show = is_gamepad_connected ? gamepad_mode_visible_widgets : gamepad_mode_hidden_widgets;
+				var widgets_to_hide = is_gamepad_connected ? gamepad_mode_hidden_widgets : gamepad_mode_visible_widgets;
+				foreach(var w in widgets_to_show) w.show();
+				foreach(var w in widgets_to_hide) w.hide();
+				if(is_gamepad_connected)
+				{
+					view.selected = 0;
+					games_grid.grab_focus();
+				}
+				return Source.REMOVE;
+			});
+		}
+
 		private void on_gamepad_connected(Manette.Device device)
 		{
 			debug("[Gamepad] '%s' connected", device.get_name());
 			device.button_press_event.connect(on_gamepad_button_press_event);
 			device.button_release_event.connect(on_gamepad_button_release_event);
 			device.absolute_axis_event.connect(on_gamepad_absolute_axis_event);
-			gamepad_connected = true;
+			connected_gamepads.add(device);
 			gamepad_axes_to_keys_thread();
-
-			Idle.add(() => {
-				view.selected = 0;
-				foreach(var widget in gamepad_mode_visible_widgets)
-				{
-					widget.show();
-				}
-				foreach(var widget in gamepad_mode_hidden_widgets)
-				{
-					widget.hide();
-				}
-				games_grid.grab_focus();
-				return Source.REMOVE;
-			});
+			ui_update_gamepad_mode();
 		}
 
 		private void on_gamepad_disconnected(Manette.Device device)
 		{
 			debug("[Gamepad] '%s' disconnected", device.get_name());
-			gamepad_connected = false;
-
-			Idle.add(() => {
-				foreach(var widget in gamepad_mode_visible_widgets)
-				{
-					widget.hide();
-				}
-				foreach(var widget in gamepad_mode_hidden_widgets)
-				{
-					widget.show();
-				}
-				return Source.REMOVE;
-			});
+			connected_gamepads.remove(device);
+			ui_update_gamepad_mode();
 		}
 
 		private void on_gamepad_button_press_event(Manette.Device device, Manette.Event e)
@@ -983,7 +991,7 @@ namespace GameHub.UI.Views.GamesView
 			if(gamepad_axes_to_keys_thread_running) return;
 			Utils.thread("GamepadAxesToKeysThread", () => {
 				gamepad_axes_to_keys_thread_running = true;
-				while(gamepad_connected)
+				while(connected_gamepads.size > 0)
 				{
 					foreach(var axis in Gamepad.Axes.values)
 					{
