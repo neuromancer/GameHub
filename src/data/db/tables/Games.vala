@@ -1,3 +1,21 @@
+/*
+This file is part of GameHub.
+Copyright (C) 2018 Anatoliy Kashkin
+
+GameHub is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GameHub is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GameHub.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using Gee;
 using Sqlite;
 
@@ -28,6 +46,7 @@ namespace GameHub.Data.DB.Tables
 		public static Table.Field COMPAT_TOOL;
 		public static Table.Field COMPAT_TOOL_SETTINGS;
 		public static Table.Field ARGUMENTS;
+		public static Table.Field LAST_LAUNCH;
 
 		public Games()
 		{
@@ -47,6 +66,7 @@ namespace GameHub.Data.DB.Tables
 			COMPAT_TOOL          = f(11);
 			COMPAT_TOOL_SETTINGS = f(12);
 			ARGUMENTS            = f(13);
+			LAST_LAUNCH          = f(14);
 		}
 
 		public override void migrate(Sqlite.Database db, int version)
@@ -76,6 +96,10 @@ namespace GameHub.Data.DB.Tables
 					case 1:
 						db.exec("ALTER TABLE `games` ADD `arguments` string");
 						break;
+
+					case 2:
+						db.exec("ALTER TABLE `games` ADD `last_launch` integer not null default 0");
+						break;
 				}
 			}
 		}
@@ -102,8 +126,9 @@ namespace GameHub.Data.DB.Tables
 					`platforms`,
 					`compat_tool`,
 					`compat_tool_settings`,
-					`arguments`)
-				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", -1, out s);
+					`arguments`,
+					`last_launch`)
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", -1, out s);
 
 			if(res != Sqlite.OK)
 			{
@@ -140,6 +165,7 @@ namespace GameHub.Data.DB.Tables
 			COMPAT_TOOL.bind(s, game.compat_tool);
 			COMPAT_TOOL_SETTINGS.bind(s, game.compat_tool_settings);
 			ARGUMENTS.bind(s, game.arguments);
+			LAST_LAUNCH.bind_int64(s, game.last_launch);
 
 			res = s.step();
 

@@ -1,3 +1,21 @@
+/*
+This file is part of GameHub.
+Copyright (C) 2018 Anatoliy Kashkin
+
+GameHub is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GameHub is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GameHub.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using Gtk;
 using GLib;
 using Granite;
@@ -6,15 +24,37 @@ namespace GameHub.Settings
 {
 	public enum WindowState
 	{
-		NORMAL = 0,
-		MAXIMIZED = 1,
-		FULLSCREEN = 2
+		NORMAL = 0, MAXIMIZED = 1, FULLSCREEN = 2
 	}
 
 	public enum GamesView
 	{
-		GRID = 0,
-		LIST = 1
+		GRID = 0, LIST = 1
+	}
+
+	public enum SortMode
+	{
+		NAME = 0, LAST_LAUNCH = 1;
+
+		public string name()
+		{
+			switch(this)
+			{
+				case SortMode.NAME:        return C_("sort_mode", "Name");
+				case SortMode.LAST_LAUNCH: return C_("sort_mode", "Last launch");
+			}
+			assert_not_reached();
+		}
+
+		public string icon()
+		{
+			switch(this)
+			{
+				case SortMode.NAME:        return "insert-text-symbolic";
+				case SortMode.LAST_LAUNCH: return "document-open-recent-symbolic";
+			}
+			assert_not_reached();
+		}
 	}
 
 	public class SavedState: Granite.Services.Settings
@@ -26,6 +66,8 @@ namespace GameHub.Settings
 		public int window_y { get; set; }
 
 		public GamesView games_view { get; set; }
+
+		public SortMode sort_mode { get; set; }
 
 		public SavedState()
 		{
@@ -52,6 +94,8 @@ namespace GameHub.Settings
 
 		public bool show_unsupported_games { get; set; }
 		public bool use_compat { get; set; }
+
+		public bool use_imported_tags { get; set; }
 
 		public UI()
 		{

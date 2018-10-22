@@ -1,3 +1,21 @@
+/*
+This file is part of GameHub.
+Copyright (C) 2018 Anatoliy Kashkin
+
+GameHub is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GameHub is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GameHub.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using Gtk;
 using Gdk;
 using Granite;
@@ -47,10 +65,13 @@ namespace GameHub.UI.Views.GamesView
 			hbox.add(vbox);
 
 			game.status_change.connect(s => {
-				label.label = (game.has_tag(Tables.Tags.BUILTIN_FAVORITES) ? "★ " : "") + game.name;
-				state_label.label = s.description;
-				update_icon();
-				Idle.add(() => { changed(); return Source.REMOVE; });
+				Idle.add(() => {
+					label.label = (game.has_tag(Tables.Tags.BUILTIN_FAVORITES) ? "★ " : "") + game.name;
+					state_label.label = s.description;
+					update_icon();
+					changed();
+					return Source.REMOVE;
+				});
 			});
 			game.status_change(game.status);
 
@@ -73,7 +94,7 @@ namespace GameHub.UI.Views.GamesView
 						break;
 
 					case 3:
-						new GameContextMenu(game, image).open(e);
+						new GameContextMenu(game, image).open(e, true);
 						break;
 				}
 				return true;

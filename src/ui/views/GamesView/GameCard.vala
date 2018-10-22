@@ -1,3 +1,21 @@
+/*
+This file is part of GameHub.
+Copyright (C) 2018 Anatoliy Kashkin
+
+GameHub is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GameHub is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GameHub.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using Gtk;
 using Gdk;
 using Gee;
@@ -115,28 +133,31 @@ namespace GameHub.UI.Views.GamesView
 				switch(e.button)
 				{
 					case 1:
-						if(game.status.state == Game.State.INSTALLED)
-						{
-							if(game.use_compat)
-							{
-								game.run_with_compat.begin();
-							}
-							else
-							{
-								game.run.begin();
-							}
-						}
-						else if(game.status.state == Game.State.UNINSTALLED)
-						{
-							game.install.begin();
-						}
+						run_game();
 						break;
 
 					case 3:
-						new GameContextMenu(game, this).open(e);
+						open_context_menu(e, true);
 						break;
 				}
 				return true;
+			});
+			key_release_event.connect(e => {
+				switch(((EventKey) e).keyval)
+				{
+					case Key.Return:
+					case Key.space:
+					case Key.KP_Space:
+						run_game();
+						return true;
+
+					case Key.Control_L:
+					case Key.Control_R:
+					case Key.Menu:
+						open_context_menu(e, false);
+						return true;
+				}
+				return false;
 			});
 
 			show_all();
@@ -146,49 +167,54 @@ namespace GameHub.UI.Views.GamesView
 		{
 			Object(game: game);
 
-			label.label = game.name;
-
-			src_icon.icon_name = game.source.icon;
+			Idle.add(() => {
+				label.label = game.name;
+				src_icon.icon_name = game.source.icon;
+				return Source.REMOVE;
+			});
 
 			update();
 
 			card.get_style_context().add_class("installed");
 
 			game.status_change.connect(s => {
-				label.label = (game.has_tag(Tables.Tags.BUILTIN_FAVORITES) ? "★ " : "") + game.name;
-				status_label.label = s.description;
-				switch(s.state)
-				{
-					case Game.State.UNINSTALLED:
-						card.get_style_context().remove_class("installed");
-						card.get_style_context().remove_class("downloading");
-						card.get_style_context().remove_class("installing");
-						break;
+				Idle.add(() => {
+					label.label = (game.has_tag(Tables.Tags.BUILTIN_FAVORITES) ? "★ " : "") + game.name;
+					status_label.label = s.description;
+					switch(s.state)
+					{
+						case Game.State.UNINSTALLED:
+							card.get_style_context().remove_class("installed");
+							card.get_style_context().remove_class("downloading");
+							card.get_style_context().remove_class("installing");
+							break;
 
-					case Game.State.INSTALLED:
-						card.get_style_context().add_class("installed");
-						card.get_style_context().remove_class("downloading");
-						card.get_style_context().remove_class("installing");
-						break;
+						case Game.State.INSTALLED:
+							card.get_style_context().add_class("installed");
+							card.get_style_context().remove_class("downloading");
+							card.get_style_context().remove_class("installing");
+							break;
 
-					case Game.State.DOWNLOADING:
-						card.get_style_context().remove_class("installed");
-						card.get_style_context().add_class("downloading");
-						card.get_style_context().remove_class("installing");
-						Allocation alloc;
-						card.get_allocation(out alloc);
-						if(s.download != null)
-						{
-							progress_bar.set_size_request((int) (s.download.status.progress * alloc.width), 8);
-						}
-						break;
+						case Game.State.DOWNLOADING:
+							card.get_style_context().remove_class("installed");
+							card.get_style_context().add_class("downloading");
+							card.get_style_context().remove_class("installing");
+							Allocation alloc;
+							card.get_allocation(out alloc);
+							if(s.download != null)
+							{
+								progress_bar.set_size_request((int) (s.download.status.progress * alloc.width), 8);
+							}
+							break;
 
-					case Game.State.INSTALLING:
-						card.get_style_context().remove_class("installed");
-						card.get_style_context().remove_class("downloading");
-						card.get_style_context().add_class("installing");
-						break;
-				}
+						case Game.State.INSTALLING:
+							card.get_style_context().remove_class("installed");
+							card.get_style_context().remove_class("downloading");
+							card.get_style_context().add_class("installing");
+							break;
+					}
+					return Source.REMOVE;
+				});
 			});
 			game.status_change(game.status);
 
@@ -196,6 +222,30 @@ namespace GameHub.UI.Views.GamesView
 				Utils.load_image.begin(image, game.image, "image");
 			});
 			game.notify_property("image");
+		}
+
+		private void run_game()
+		{
+			if(game.status.state == Game.State.INSTALLED)
+			{
+				if(game.use_compat)
+				{
+					game.run_with_compat.begin();
+				}
+				else
+				{
+					game.run.begin();
+				}
+			}
+			else if(game.status.state == Game.State.UNINSTALLED)
+			{
+				game.install.begin();
+			}
+		}
+
+		private void open_context_menu(Event e, bool at_pointer=true)
+		{
+			new GameContextMenu(game, this).open(e, at_pointer);
 		}
 
 		public void update()

@@ -1,3 +1,21 @@
+/*
+This file is part of GameHub.
+Copyright (C) 2018 Anatoliy Kashkin
+
+GameHub is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GameHub is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GameHub.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using Gtk;
 using Gdk;
 using Granite;
@@ -85,10 +103,17 @@ namespace GameHub.UI.Views.GamesView
 			show_all();
 		}
 
-		public void open(Event e)
+		public void open(Event e, bool at_pointer=true)
 		{
 			#if GTK_3_22
-			popup_at_pointer(e);
+			if(at_pointer)
+			{
+				popup_at_pointer(e);
+			}
+			else
+			{
+				popup_at_widget(target, Gravity.SOUTH, Gravity.NORTH, e);
+			}
 			#else
 			popup(null, null, null, 0, ((EventButton) e).time);
 			#endif

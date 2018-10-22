@@ -20,24 +20,12 @@ deps = [
 	dependency('json-glib-1.0'),
 	dependency('gee-0.8'),
 	dependency('sqlite3'),
-	dependency('libsoup-2.4'),
 	dependency('libxml-2.0'),
 	meson.get_compiler('vala').find_library('posix'),
 	meson.get_compiler('vala').find_library('linux')
 ]
 
-gtk322 = dependency('gtk+-3.0', version: '>=3.22', required: false)
-if gtk322.found()
-	add_global_arguments('-D', 'GTK_3_22', language: 'vala')
-	deps += gtk322
-else
-	deps += dependency('gtk+-3.0')
-endif
-
-executable(
-	meson.project_name(),
-	project_config,
-
+sources = [
 	'app.vala',
 
 	'data/Game.vala',
@@ -115,7 +103,41 @@ executable(
 	'utils/Settings.vala',
 
 	'utils/downloader/Downloader.vala',
-	'utils/downloader/SoupDownloader.vala',
+	'utils/downloader/SoupDownloader.vala'
+]
+
+gtk322 = dependency('gtk+-3.0', version: '>=3.22', required: false)
+if gtk322.found()
+	add_global_arguments('-D', 'GTK_3_22', language: 'vala')
+	deps += gtk322
+else
+	deps += dependency('gtk+-3.0')
+endif
+
+# not sure which version fixed Message.response_headers.get_content_range(), 2.60+ should work
+soup260 = dependency('libsoup-2.4', version: '>=2.60', required: false)
+if soup260.found()
+	add_global_arguments('-D', 'SOUP_2_60', language: 'vala')
+	deps += soup260
+else
+	deps += dependency('libsoup-2.4')
+endif
+
+manette = dependency('manette-0.2', required: false)
+if manette.found()
+	add_global_arguments('-D', 'MANETTE', language: 'vala')
+	deps += manette
+	deps += dependency('x11')
+	deps += dependency('gdk-x11-3.0')
+	deps += dependency('xtst')
+	sources += 'utils/Gamepad.vala'
+endif
+
+executable(
+	meson.project_name(),
+	project_config,
+
+	sources,
 
 	icons_gresource,
 	css_gresource,

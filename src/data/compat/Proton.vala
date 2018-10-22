@@ -1,3 +1,21 @@
+/*
+This file is part of GameHub.
+Copyright (C) 2018 Anatoliy Kashkin
+
+GameHub is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GameHub is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GameHub.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using GameHub.Utils;
 
 using GameHub.Data.Sources.Steam;
@@ -6,14 +24,14 @@ namespace GameHub.Data.Compat
 {
 	public class Proton: Wine
 	{
-		public const string[] APPIDS = {"930400", "858280"}; // 3.7 Beta, 3.7
 		protected override string install_postfix() { return @"/$(COMPAT_DATA_DIR)/proton_$(name)/pfx/drive_c/Game"; } 
+		public const string[] APPIDS = {"961940", "930400", "858280"}; // 3.16, 3.7 Beta, 3.7
 
 		public string appid { get; construct; }
 
 		public Proton(string appid)
 		{
-			Object(appid: appid, binary: "");
+			Object(appid: appid, binary: "", arch: "");
 		}
 
 		construct

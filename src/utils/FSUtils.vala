@@ -1,3 +1,21 @@
+/*
+This file is part of GameHub.
+Copyright (C) 2018 Anatoliy Kashkin
+
+GameHub is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GameHub is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GameHub.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using Gee;
 using Gdk;
 using GLib;
@@ -48,11 +66,11 @@ namespace GameHub.Utils
 				{
 					owned get
 					{
-						#if FLATPAK
+						/*#if FLATPAK
 						return "/home/" + Environment.get_user_name() + "/.var/app/com.valvesoftware.Steam/.steam";
-						#else
+						#else*/
 						return FSUtils.Paths.Settings.get_instance().steam_home;
-						#endif
+						//#endif
 					}
 				}
 				public static string Config { owned get { return FSUtils.Paths.Steam.Home + "/steam/config"; } }
@@ -68,11 +86,11 @@ namespace GameHub.Utils
 				{
 					owned get
 					{
-						#if FLATPAK
+						/*#if FLATPAK
 						return Environment.get_user_data_dir() + "/games/GOG";
-						#else
+						#else*/
 						return FSUtils.Paths.Settings.get_instance().gog_games;
-						#endif
+						//#endif
 					}
 				}
 			}
@@ -83,11 +101,11 @@ namespace GameHub.Utils
 				{
 					owned get
 					{
-						#if FLATPAK
+						/*#if FLATPAK
 						return Environment.get_user_data_dir() + "/games/HumbleBundle";
-						#else
+						#else*/
 						return FSUtils.Paths.Settings.get_instance().humble_games;
-						#endif
+						//#endif
 					}
 				}
 			}
@@ -276,6 +294,22 @@ namespace GameHub.Utils
 		{
 			mkdir(FSUtils.Paths.Cache.Home);
 			mkdir(FSUtils.Paths.Cache.Images);
+
+			#if FLATPAK
+			var paths = Paths.Settings.get_instance();
+			if(paths.steam_home == paths.schema.get_default_value("steam-home").get_string())
+			{
+				paths.steam_home = "/home/" + Environment.get_user_name() + "/.var/app/com.valvesoftware.Steam/.steam";
+			}
+			if(paths.gog_games == paths.schema.get_default_value("gog-games").get_string())
+			{
+				paths.gog_games = Environment.get_user_data_dir() + "/games/GOG";
+			}
+			if(paths.humble_games == paths.schema.get_default_value("humble-games").get_string())
+			{
+				paths.humble_games = Environment.get_user_data_dir() + "/games/HumbleBundle";
+			}
+			#endif
 
 			FSUtils.rm(FSUtils.Paths.Collection.GOG.expand_installers("*"), ".goutputstream-*");
 			FSUtils.rm(FSUtils.Paths.Collection.Humble.expand_installers("*"), ".goutputstream-*");

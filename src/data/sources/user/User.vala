@@ -1,3 +1,21 @@
+/*
+This file is part of GameHub.
+Copyright (C) 2018 Anatoliy Kashkin
+
+GameHub is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GameHub is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GameHub.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using Gee;
 using GameHub.Data.DB;
 using GameHub.Utils;
@@ -95,6 +113,20 @@ namespace GameHub.Data.Sources.User
 			yield;
 
 			return _games;
+		}
+
+		public void add_game(UserGame game)
+		{
+			if(_games.contains(game)) return;
+			_games.add(game);
+			games_count++;
+		}
+
+		public void remove_game(UserGame game)
+		{
+			_games.remove(game);
+			games_count--;
+			Tables.Games.remove(game);
 		}
 	}
 }

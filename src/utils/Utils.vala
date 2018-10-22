@@ -1,3 +1,21 @@
+/*
+This file is part of GameHub.
+Copyright (C) 2018 Anatoliy Kashkin
+
+GameHub is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GameHub is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GameHub.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using Gtk;
 using Granite;
 
@@ -40,7 +58,7 @@ namespace GameHub.Utils
 		}
 	}
 
-	public static string run(string[] cmd, string? dir=null, string[]? env=null, bool override_runtime=false)
+	public static string run(string[] cmd, string? dir=null, string[]? env=null, bool override_runtime=false, bool log=true)
 	{
 		string stdout;
 
@@ -52,12 +70,19 @@ namespace GameHub.Utils
 		{
 			cenv = Environ.set_variable(cenv, "LD_LIBRARY_PATH", ProjectConfig.RUNTIME);
 		}
+		string[] ccmd = { "flatpak-spawn", "--host" };
+		foreach(var arg in cmd)
+		{
+			ccmd += arg;
+		}
+		#else
+		string[] ccmd = cmd;
 		#endif
 
 		try
 		{
-			debug("[Utils.run] {'%s'}; dir: '%s'", string.joinv("' '", cmd), cdir);
-			Process.spawn_sync(cdir, cmd, cenv, SpawnFlags.SEARCH_PATH, null, out stdout);
+			if(log) debug("[Utils.run] {'%s'}; dir: '%s'", string.joinv("' '", cmd), cdir);
+			Process.spawn_sync(cdir, ccmd, cenv, SpawnFlags.SEARCH_PATH, null, out stdout);
 			stdout = stdout.strip();
 			if(stdout.length > 0) print(stdout + "\n");
 		}
@@ -68,7 +93,7 @@ namespace GameHub.Utils
 		return stdout;
 	}
 
-	public static async void run_async(string[] cmd, string? dir=null, string[]? env=null, bool override_runtime=false, bool wait=true)
+	public static async void run_async(string[] cmd, string? dir=null, string[]? env=null, bool override_runtime=false, bool wait=true, bool log=true)
 	{
 		Pid pid;
 
@@ -80,12 +105,19 @@ namespace GameHub.Utils
 		{
 			cenv = Environ.set_variable(cenv, "LD_LIBRARY_PATH", ProjectConfig.RUNTIME);
 		}
+		string[] ccmd = { "flatpak-spawn", "--host" };
+		foreach(var arg in cmd)
+		{
+			ccmd += arg;
+		}
+		#else
+		string[] ccmd = cmd;
 		#endif
 
 		try
 		{
-			debug("[Utils.run_async] Running {'%s'} in '%s'", string.joinv("' '", cmd), cdir);
-			Process.spawn_async(cdir, cmd, cenv, SpawnFlags.SEARCH_PATH | SpawnFlags.STDERR_TO_DEV_NULL | SpawnFlags.DO_NOT_REAP_CHILD, null, out pid);
+			if(log) debug("[Utils.run_async] Running {'%s'} in '%s'", string.joinv("' '", cmd), cdir);
+			Process.spawn_async(cdir, ccmd, cenv, SpawnFlags.SEARCH_PATH | SpawnFlags.STDERR_TO_DEV_NULL | SpawnFlags.DO_NOT_REAP_CHILD, null, out pid);
 
 			ChildWatch.add(pid, (pid, status) => {
 				Process.close_pid(pid);
@@ -100,12 +132,12 @@ namespace GameHub.Utils
 		if(wait) yield;
 	}
 
-	public static async string run_thread(string[] cmd, string? dir=null, string[]? env=null, bool override_runtime=false)
+	public static async string run_thread(string[] cmd, string? dir=null, string[]? env=null, bool override_runtime=false, bool log=true)
 	{
 		string stdout = "";
 
 		Utils.thread("Utils.run_thread", () => {
-			stdout = Utils.run(cmd, dir, env, override_runtime);
+			stdout = Utils.run(cmd, dir, env, override_runtime, log);
 			Idle.add(run_thread.callback);
 		});
 

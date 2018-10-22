@@ -1,3 +1,21 @@
+/*
+This file is part of GameHub.
+Copyright (C) 2018 Anatoliy Kashkin
+
+GameHub is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GameHub is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GameHub.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using Gtk;
 using Granite;
 using GameHub.Utils;
@@ -27,10 +45,8 @@ namespace GameHub.UI.Dialogs.SettingsDialog.Tabs
 			add_steam_apikey_entry();
 			add_labeled_link(_("Steam API keys have limited number of uses per day"), _("Generate key"), "steam://openurl/https://steamcommunity.com/dev/apikey");
 
-			#if !FLATPAK
 			add_separator();
 			add_file_chooser(_("Installation directory"), FileChooserAction.SELECT_FOLDER, paths.steam_home, v => { paths.steam_home = v; dialog.show_restart_message(); }, false);
-			#endif
 
 			update();
 		}

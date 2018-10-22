@@ -1,3 +1,21 @@
+/*
+This file is part of GameHub.
+Copyright (C) 2018 Anatoliy Kashkin
+
+GameHub is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+GameHub is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with GameHub.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 using Gee;
 using Gtk;
 
@@ -102,6 +120,8 @@ namespace GameHub.Data
 		public File install_dir { get; protected set; }
 		public string? store_page { get; protected set; default = null; }
 
+		public int64 last_launch { get; protected set; default = 0; }
+
 		public abstract async void install();
 		public abstract async void uninstall();
 
@@ -127,6 +147,8 @@ namespace GameHub.Data
 					}
 				}
 
+				last_launch = get_real_time() / 1000;
+				save();
 				yield Utils.run_thread(cmd, executable.get_parent().get_path(), null, true);
 			}
 		}
