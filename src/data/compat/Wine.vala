@@ -76,7 +76,7 @@ namespace GameHub.Data.Compat
 
 		public override bool can_run(Game game)
 		{
-			return installed && Platform.WINDOWS in game.platforms;
+			return installed && (game is GameHub.Data.Sources.User.UserGame || Platform.WINDOWS in game.platforms);
 		}
 
 		protected virtual async string[] prepare_installer_args(Game game)
@@ -136,7 +136,7 @@ namespace GameHub.Data.Compat
 			{
 				env = Environ.set_variable(env, "WINEPREFIX", prefix.get_path());
 			}
-			if(arch != "")
+			if(arch != null && arch.length > 0)
 			{
 				env = Environ.set_variable(env, "WINEARCH", arch);
 			}
@@ -154,8 +154,7 @@ namespace GameHub.Data.Compat
 			{
 				env = Environ.set_variable(env, "WINEPREFIX", prefix.get_path());
 			}
-			env = Environ.set_variable(env, "WINEDLLOVERRIDES", "mshtml=d");
-			if(arch != "")
+			if(arch != null && arch.length > 0)
 			{
 				env = Environ.set_variable(env, "WINEARCH", arch);
 			}
@@ -173,8 +172,7 @@ namespace GameHub.Data.Compat
 			{
 				env = Environ.set_variable(env, "WINEPREFIX", prefix.get_path());
 			}
-			env = Environ.set_variable(env, "WINEDLLOVERRIDES", "mshtml=d");
-			if(arch != "")
+			if(arch != null && arch.length > 0)
 			{
 				env = Environ.set_variable(env, "WINEARCH", arch);
 			}
@@ -192,8 +190,7 @@ namespace GameHub.Data.Compat
 			{
 				env = Environ.set_variable(env, "WINEPREFIX", prefix.get_path());
 			}
-			env = Environ.set_variable(env, "WINEDLLOVERRIDES", "mshtml=d");
-			if(arch != "")
+			if(arch != null && arch.length > 0)
 			{
 				env = Environ.set_variable(env, "WINEARCH", arch);
 			}

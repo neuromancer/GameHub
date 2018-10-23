@@ -100,6 +100,7 @@ namespace GameHub.Data.Compat
 		public override bool can_run(Game game)
 		{
                         var configs = find_configs(game.install_dir);
+                        multi_config.clear();
                         var has_configs = configs.size > 0;
                         if (has_configs) {
                             warning("Found dir %s with dosbox conf", game.install_dir.get_path());       
