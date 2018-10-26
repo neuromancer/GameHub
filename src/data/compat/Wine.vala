@@ -24,7 +24,7 @@ namespace GameHub.Data.Compat
 {
 	public class Wine: CompatTool
 	{
-                protected virtual string install_postfix() { return "/_gamehub/"+binary+"/drive_c/Game"; }
+                protected virtual string install_postfix() { return "/_gamehub/"+binary+"_"+arch+"/drive_c/Game"; }
 		public string binary { get; construct; default = "wine"; }
 		public string arch { get; construct; default = "win64"; }
 		public File? wine_binary { get; protected set; }
