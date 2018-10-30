@@ -97,7 +97,7 @@ namespace GameHub.Data.Compat
 			return configs;
 		}
 
-		public override bool can_run(Game game)
+		public override bool can_run(Runnable game)
 		{
                         var configs = find_configs(game.install_dir);
                         multi_config.clear();
@@ -123,10 +123,10 @@ namespace GameHub.Data.Compat
                           }
                         }
 	
-			return installed && has_configs;
+			return installed && game is Game  && has_configs; //&& find_configs(game.install_dir).size > 0;
 		}
 
-		public override async void run(Game game)
+		public override async void run(Runnable game)
 		{
 			if(!can_run(game)) return;
                         warning("multi_config size %d", multi_config.size);
