@@ -164,7 +164,8 @@ namespace GameHub.Data.Compat
 				cmd += conf_windowed.get_path();
 			}
 
-			if(game.install_dir.get_child("DOSBOX").get_child("DOSBox.exe").query_exists())
+			if(game.install_dir.get_child("DOSBOX").get_child("DOSBox.exe").query_exists() || 
+                           game.install_dir.get_child("DOSBOX").get_child("dosbox.exe").query_exists())
 			{
 				wdir = game.install_dir.get_child("DOSBOX");
 			}
