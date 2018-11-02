@@ -99,7 +99,7 @@ namespace GameHub.Data
 
 		public string? store_page { get; protected set; default = null; }
 
-		public int64 last_launch { get; protected set; default = 0; }
+		public int64 last_launch { get; set; default = 0; }
 
 		public abstract async void install();
 		public abstract async void uninstall();
@@ -240,7 +240,7 @@ namespace GameHub.Data
 
 						var type = yield guess_type(file, f > 0);
 
-						if(type == InstallerType.WINDOWS_EXECUTABLE)
+						if(type == InstallerType.WINDOWS_EXECUTABLE && tool is Compat.Innoextract)
 						{
 							var desc = yield Utils.run_thread({"file", "-b", path});
 							if(desc != null && desc.length > 0 && NSIS_INSTALLER_DESCRIPTION in desc)
