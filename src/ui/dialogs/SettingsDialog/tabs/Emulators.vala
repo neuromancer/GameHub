@@ -71,8 +71,13 @@ namespace GameHub.UI.Dialogs.SettingsDialog.Tabs
 			remove_btn = new Button.from_icon_name("list-remove-symbolic", IconSize.MENU);
 			remove_btn.get_style_context().add_class(Gtk.STYLE_CLASS_FLAT);
 
-			actionbar.pack_start(add_btn);
-			actionbar.pack_end(remove_btn);
+			var actions = new Box(Orientation.HORIZONTAL, 0);
+			actions.get_style_context().add_class(Gtk.STYLE_CLASS_LINKED);
+
+			actions.add(add_btn);
+			actions.add(remove_btn);
+
+			actionbar.pack_start(actions);
 
 			sidebar_box.add(sidebar);
 			sidebar_box.add(actionbar);
@@ -138,7 +143,7 @@ namespace GameHub.UI.Dialogs.SettingsDialog.Tabs
 			}
 		}
 
-		private class EmulatorPage: Box
+		private class EmulatorPage: Grid
 		{
 			private string _title;
 			public string title
@@ -159,9 +164,19 @@ namespace GameHub.UI.Dialogs.SettingsDialog.Tabs
 			public Stack stack { get; construct; }
 			public Emulator emulator { get; construct set; }
 
-			private Entry name_entry;
-			private FileChooserButton executable_picker;
-			private Entry args_entry;
+			private int rows = 0;
+
+			private Granite.Widgets.ModeButton mode;
+
+			private new Entry name;
+			private FileChooserButton emudir;
+			private FileChooserButton executable;
+			private Label executable_label;
+			private Entry arguments;
+			private Label arguments_label;
+
+			private Button run_btn;
+			private Button save_btn;
 
 			public EmulatorPage(Stack stack, Emulator? emulator=null)
 			{
@@ -170,48 +185,75 @@ namespace GameHub.UI.Dialogs.SettingsDialog.Tabs
 
 			construct
 			{
-				var name_header = new HeaderLabel(_("Name"));
-				name_header.xpad = 8;
-				add(name_header);
+				row_spacing = 4;
+				column_spacing = 8;
 
-				name_entry = new Entry();
-				name_entry.text = emulator.name ?? "";
-				name_entry.placeholder_text = name_entry.primary_icon_tooltip_text = _("Name");
-				name_entry.primary_icon_name = "insert-text-symbolic";
-				name_entry.primary_icon_activatable = false;
-				name_entry.margin = 4;
-				name_entry.margin_top = 0;
-				add(name_entry);
+				mode = new Granite.Widgets.ModeButton();
+				mode.margin_bottom = 8;
+				mode.halign = Align.CENTER;
+				mode.append_text(_("Executable"));
+				mode.append_text(_("Installer"));
+				mode.selected = 0;
+				attach(mode, 0, rows, 2, 1);
+				rows++;
 
-				name_entry.changed.connect(() => {
-					title = name_entry.text.strip();
+				save_btn = new Button.with_label(_("Save"));
+				save_btn.halign = Align.END;
+				save_btn.valign = Align.END;
+				save_btn.margin_top = 4;
+				save_btn.sensitive = false;
+
+				run_btn = new Button.with_label(_("Run"));
+				run_btn.halign = Align.START;
+				run_btn.valign = Align.END;
+				run_btn.margin_top = 4;
+				run_btn.sensitive = false;
+
+				name = add_entry(_("Name"), "insert-text-symbolic", true);
+
+				name.text = emulator.name ?? "";
+
+				name.changed.connect(() => {
+					title = name.text.strip();
 					Tables.Emulators.remove(emulator);
 					emulator.name = title;
 				});
 
-				name_entry.changed();
+				name.changed();
 
-				var executable_header = new HeaderLabel(_("Executable"));
-				executable_header.xpad = 8;
-				add(executable_header);
+				add_separator();
 
-				executable_picker = new FileChooserButton(_("Select executable"), FileChooserAction.OPEN);
-				executable_picker.margin_start = executable_picker.margin_end = 4;
+				executable = add_filechooser(_("Executable"), _("Select executable"), FileChooserAction.OPEN, true, out executable_label);
 
-				executable_picker.file_set.connect(() => {
-					emulator.executable = executable_picker.get_file();
-					if(name_entry.text.strip().length == 0)
-					{
-						name_entry.text = executable_picker.get_file().get_basename();
-					}
+				arguments = add_entry(_("Arguments"), "utilities-terminal-symbolic", false, out arguments_label);
+
+				arguments.text = emulator.arguments ?? "$file $game_args";
+
+				arguments.changed.connect(() => {
+					emulator.arguments = arguments.text.strip();
 				});
 
-				if(emulator.executable != null && emulator.executable.query_exists())
+				arguments.changed();
+
+				add_separator();
+
+				emudir = add_filechooser(_("Directory"), _("Select emulator directory"), FileChooserAction.SELECT_FOLDER, true);
+
+				executable.file_set.connect(() => {
+					emulator.executable = executable.get_file();
+					if(name.text.strip().length == 0)
+					{
+						name.text = executable.get_file().get_basename();
+					}
+					update();
+				});
+
+				if(emulator.install_dir != null && emulator.install_dir.query_exists())
 				{
 					try
 					{
-						executable_picker.set_file(emulator.executable);
-						executable_picker.file_set();
+						emudir.set_file(emulator.install_dir);
+						emudir.file_set();
 					}
 					catch(Error e)
 					{
@@ -219,56 +261,168 @@ namespace GameHub.UI.Dialogs.SettingsDialog.Tabs
 					}
 				}
 
-				add(executable_picker);
+				if(emulator.executable != null && emulator.executable.query_exists())
+				{
+					try
+					{
+						executable.set_file(emulator.executable);
+						executable.file_set();
+					}
+					catch(Error e)
+					{
+						warning(e.message);
+					}
+				}
 
-				var args_header = new HeaderLabel(_("Arguments"));
-				args_header.xpad = 8;
-				add(args_header);
-
-				args_entry = new Entry();
-				args_entry.text = emulator.arguments ?? "$file $game_args";
-				args_entry.placeholder_text = args_entry.primary_icon_tooltip_text = _("Arguments");
-				args_entry.primary_icon_name = "utilities-terminal-symbolic";
-				args_entry.primary_icon_activatable = false;
-				args_entry.margin = 4;
-				args_entry.margin_top = 0;
-				add(args_entry);
-
-				args_entry.changed.connect(() => {
-					emulator.arguments = args_entry.text.strip();
-				});
-
-				args_entry.changed();
-
-				var compat_header = new HeaderLabel(_("Compatibility"));
-				compat_header.no_show_all = true;
-				compat_header.xpad = 8;
-				add(compat_header);
+				add_separator();
 
 				var compat_force_switch = add_switch(_("Force compatibility mode"), emulator.force_compat, f => { emulator.force_compat = f; });
 				compat_force_switch.no_show_all = true;
 
 				var compat_tool = new CompatToolPicker(emulator, false);
 				compat_tool.no_show_all = true;
-				compat_tool.margin_start = compat_tool.margin_end = 4;
-				add(compat_tool);
+				attach(compat_tool, 0, rows, 2, 1);
+				rows++;
 
 				emulator.notify["use-compat"].connect(() => {
 					compat_force_switch.visible = !emulator.needs_compat;
 					compat_tool.visible = emulator.use_compat;
-					compat_header.visible = compat_force_switch.visible || compat_tool.visible;
 				});
+
+				var btn_box = new Box(Orientation.HORIZONTAL, 0);
+				btn_box.expand = true;
+
+				btn_box.pack_start(run_btn);
+				btn_box.pack_end(save_btn);
+
+				attach(btn_box, 0, rows, 2, 1);
+				rows++;
+
+				run_btn.clicked.connect(run);
+				save_btn.clicked.connect(save);
+
+				mode.mode_changed.connect(update);
+
+				update();
+			}
+
+			private void update()
+			{
+				if(mode.selected == 0 && executable.get_file() != null && emudir.get_file() == null)
+				{
+					try
+					{
+						emudir.select_file(executable.get_file().get_parent());
+					}
+					catch(Error e)
+					{
+						warning(e.message);
+					}
+				}
+
+				emulator.name = title;
+				emulator.arguments = arguments.text.strip();
+
+				emulator.install_dir = emudir.get_file();
+
+				executable_label.label = mode.selected == 0 ? _("Executable") : _("Installer");
+				arguments.sensitive = arguments_label.sensitive = mode.selected == 0;
+
+				run_btn.sensitive = emulator.name.length > 0 && executable.get_file() != null && mode.selected == 0 && emudir.get_file() != null;
+				save_btn.sensitive = emulator.name.length > 0 && executable.get_file() != null && ((mode.selected == 0 && emudir.get_file() != null) || mode.selected == 1);
+
 				emulator.notify_property("use-compat");
 			}
 
 			public void save()
 			{
+				update();
+
+				if(mode.selected == 1 && executable.get_file() != null && emudir.get_file() != null)
+				{
+					sensitive = false;
+
+					emulator.installer = new Emulator.Installer(emulator, emulator.executable);
+
+					emulator.executable = null;
+					emulator.install.begin((obj, res) => {
+						emulator.install.end(res);
+						sensitive = true;
+						mode.selected = 0;
+						try
+						{
+							executable.select_file(emulator.executable);
+						}
+						catch(Error e)
+						{
+							warning(e.message);
+						}
+						emulator.save();
+					});
+
+					return;
+				}
+
 				emulator.save();
+			}
+
+			public void run()
+			{
+				save();
+				emulator.run_game.begin(null);
 			}
 
 			public new void remove()
 			{
 				emulator.remove();
+			}
+
+			private Entry add_entry(string text, string icon, bool required=true, out Label label=null)
+			{
+				label = new Label(text);
+				label.halign = Align.START;
+				label.xalign = 1;
+				label.margin = 4;
+				label.hexpand = true;
+				if(required)
+				{
+					label.get_style_context().add_class("category-label");
+				}
+				var entry = new Entry();
+				entry.primary_icon_name = icon;
+				entry.primary_icon_activatable = false;
+				entry.set_size_request(180, -1);
+				attach(label, 0, rows);
+				attach(entry, 1, rows);
+				rows++;
+				return entry;
+			}
+
+			private FileChooserButton add_filechooser(string text, string title, FileChooserAction action=FileChooserAction.OPEN, bool required=true, out Label label=null)
+			{
+				label = new Label(text);
+				label.halign = Align.START;
+				label.xalign = 1;
+				label.margin = 4;
+				label.hexpand = true;
+				if(required)
+				{
+					label.get_style_context().add_class("category-label");
+				}
+				var button = new FileChooserButton(title, action);
+				button.set_size_request(180, -1);
+				attach(label, 0, rows);
+				attach(button, 1, rows);
+				rows++;
+				return button;
+			}
+
+			private void add_separator()
+			{
+				var separator = new Separator(Orientation.HORIZONTAL);
+				separator.margin_top = separator.margin_bottom = 4;
+				attach(separator, 0, rows, 2, 1);
+				rows++;
 			}
 
 			private Box add_switch(string text, bool enabled, owned SettingsDialogTab.SwitchAction action)
@@ -283,15 +437,15 @@ namespace GameHub.UI.Dialogs.SettingsDialog.Tabs
 				label.hexpand = true;
 
 				var hbox = new Box(Orientation.HORIZONTAL, 12);
-				hbox.margin = 4;
-				hbox.margin_start = 8;
+				hbox.margin_start = 4;
 
 				hbox.add(label);
 				hbox.add(sw);
 
 				hbox.show_all();
 
-				add(hbox);
+				attach(hbox, 0, rows, 2, 1);
+				rows++;
 				return hbox;
 			}
 		}

@@ -21,6 +21,7 @@ deps = [
 	dependency('gee-0.8'),
 	dependency('sqlite3'),
 	dependency('libxml-2.0'),
+	dependency('polkit-gobject-1'),
 	meson.get_compiler('vala').find_library('posix'),
 	meson.get_compiler('vala').find_library('linux')
 ]
@@ -76,9 +77,10 @@ sources = [
 	'ui/dialogs/SettingsDialog/tabs/RetroArch.vala',
 	'ui/dialogs/SettingsDialog/tabs/Emulators.vala',
 
-	'ui/dialogs/GameInstallDialog.vala',
+	'ui/dialogs/InstallDialog.vala',
 	'ui/dialogs/GameDetailsDialog.vala',
 	'ui/dialogs/GamePropertiesDialog.vala',
+	'ui/dialogs/GameFSOverlaysDialog.vala',
 	'ui/dialogs/CompatRunDialog.vala',
 
 	'ui/views/BaseView.vala',
@@ -108,6 +110,7 @@ sources = [
 
 	'utils/Utils.vala',
 	'utils/FSUtils.vala',
+	'utils/FSOverlay.vala',
 	'utils/Parser.vala',
 	'utils/Settings.vala',
 

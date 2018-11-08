@@ -29,7 +29,7 @@ namespace GameHub.Data.Sources.Humble
 		private bool game_info_updated = false;
 		private bool game_info_refreshed = false;
 
-		public ArrayList<Game.Installer>? installers { get; protected set; default = new ArrayList<Game.Installer>(); }
+		public ArrayList<Runnable.Installer>? installers { get; protected set; default = new ArrayList<Runnable.Installer>(); }
 
 		public HumbleGame(Humble src, string order, Json.Node json_node)
 		{
@@ -62,7 +62,7 @@ namespace GameHub.Data.Sources.Humble
 			}
 
 			install_dir = FSUtils.file(FSUtils.Paths.Humble.Games, escaped_name);
-			executable = FSUtils.file(install_dir.get_path(), "start.sh");
+			executable_path = "$game_dir/start.sh";
 			info_detailed = @"{\"order\":\"$(order_id)\"}";
 			update_status();
 		}
@@ -77,7 +77,7 @@ namespace GameHub.Data.Sources.Humble
 			icon = Tables.Games.ICON.get(s);
 			image = Tables.Games.IMAGE.get(s);
 			install_dir = FSUtils.file(Tables.Games.INSTALL_PATH.get(s)) ?? FSUtils.file(FSUtils.Paths.Humble.Games, escaped_name);
-			executable = FSUtils.file(Tables.Games.EXECUTABLE.get(s)) ?? FSUtils.file(install_dir.get_path(), "start.sh");
+			executable_path = Tables.Games.EXECUTABLE.get(s);
 			compat_tool = Tables.Games.COMPAT_TOOL.get(s);
 			compat_tool_settings = Tables.Games.COMPAT_TOOL_SETTINGS.get(s);
 			arguments = Tables.Games.ARGUMENTS.get(s);
@@ -111,8 +111,16 @@ namespace GameHub.Data.Sources.Humble
 				}
 			}
 
-			var json = Parser.parse_json(info_detailed).get_object();
-			order_id = json.get_string_member("order");
+			var json_node = Parser.parse_json(info_detailed);
+			if(json_node != null && json_node.get_node_type() == Json.NodeType.OBJECT)
+			{
+				var json = json_node.get_object();
+				if(json.has_member("order"))
+				{
+					order_id = json.get_string_member("order");
+				}
+			}
+
 			update_status();
 		}
 
@@ -120,7 +128,8 @@ namespace GameHub.Data.Sources.Humble
 		{
 			if(status.state == Game.State.DOWNLOADING && status.download.status.state != Downloader.DownloadState.CANCELLED) return;
 
-			status = new Game.Status(executable.query_exists() ? Game.State.INSTALLED : Game.State.UNINSTALLED);
+			var exec = executable;
+			status = new Game.Status(exec != null && exec.query_exists() ? Game.State.INSTALLED : Game.State.UNINSTALLED);
 			if(status.state == Game.State.INSTALLED)
 			{
 				remove_tag(Tables.Tags.BUILTIN_UNINSTALLED);
@@ -138,6 +147,8 @@ namespace GameHub.Data.Sources.Humble
 		public override async void update_game_info()
 		{
 			update_status();
+
+			mount_overlays();
 
 			if((icon == null || icon == "") && (info != null && info.length > 0))
 			{
@@ -255,7 +266,7 @@ namespace GameHub.Data.Sources.Humble
 
 			if(installers.size < 1) return;
 
-			var wnd = new GameHub.UI.Dialogs.GameInstallDialog(this, installers);
+			var wnd = new GameHub.UI.Dialogs.InstallDialog(this, installers);
 
 			wnd.cancelled.connect(() => Idle.add(install.callback));
 
@@ -283,11 +294,9 @@ namespace GameHub.Data.Sources.Humble
 
 		public override async void uninstall()
 		{
-			if(executable.query_exists())
-			{
-				FSUtils.rm(install_dir.get_path(), "", "-rf");
-				update_status();
-			}
+			yield umount_overlays();
+			FSUtils.rm(install_dir.get_path(), "", "-rf");
+			update_status();
 			if(!install_dir.query_exists() && !executable.query_exists())
 			{
 				install_dir = FSUtils.file(FSUtils.Paths.GOG.Games, escaped_name);
@@ -297,11 +306,11 @@ namespace GameHub.Data.Sources.Humble
 			}
 		}
 
-		public class Installer: Game.Installer
+		public class Installer: Runnable.Installer
 		{
 			public string dl_name;
 			public string? dl_id;
-			public Game.Installer.Part part;
+			public Runnable.Installer.Part part;
 
 			public override string name { get { return dl_name; } }
 
@@ -317,7 +326,7 @@ namespace GameHub.Data.Sources.Humble
 				if(game.installers_dir == null) return;
 				var remote = File.new_for_uri(url);
 				var local = game.installers_dir.get_child("humble_" + game.id + "_" + id);
-				part = new Game.Installer.Part(id, url, full_size, remote, local);
+				part = new Runnable.Installer.Part(id, url, full_size, remote, local);
 				parts.add(part);
 			}
 

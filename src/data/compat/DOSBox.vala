@@ -100,21 +100,22 @@ namespace GameHub.Data.Compat
 			return configs;
 		}
 
-		public override bool can_run(Runnable game)
+		public override bool can_run(Runnable runnable)
 		{
-                        var configs = find_configs(game.install_dir);
+
+                        var configs = find_configs(runnable.install_dir);
                         multi_config.clear();
                         var has_configs = configs.size > 0;
                         if (has_configs) {
-                            warning("Found dir %s with dosbox conf", game.install_dir.get_path());       
+                            warning("Found dir %s with dosbox conf", runnable.install_dir.get_path());       
                             multi_config.add(configs);
                         }
                        	FileInfo? finfo = null;
-			var enumerator = game.install_dir.enumerate_children("standard::*", FileQueryInfoFlags.NOFOLLOW_SYMLINKS);
+			var enumerator = runnable.install_dir.enumerate_children("standard::*", FileQueryInfoFlags.NOFOLLOW_SYMLINKS);
 			while((finfo = enumerator.next_file()) != null)
 			{
                           if (finfo.get_file_type () == FileType.DIRECTORY) {
-                              File subdir = game.install_dir.resolve_relative_path (finfo.get_name ());
+                              File subdir = runnable.install_dir.resolve_relative_path (finfo.get_name ());
                               configs = find_configs(subdir);
                               has_configs = has_configs || configs.size > 0; 
 
@@ -126,21 +127,20 @@ namespace GameHub.Data.Compat
                           }
                         }
 	
-			return installed && game is Game  && has_configs; //&& find_configs(game.install_dir).size > 0;
+			return installed && runnable is Game  && has_configs; //&& find_configs(runnable.install_dir).size > 0;
 		}
 
-		public override async void run(Runnable game)
+		public override async void run(Runnable runnable)
 		{
-			if(!can_run(game)) return;
+			if(!can_run(runnable)) return;
                         warning("multi_config size %d", multi_config.size);
 
 			string[] cmd = { executable.get_path() };
 
-			var wdir = game.install_dir;
+			var wdir = runnable.install_dir;
 
 			var configs = multi_config.get(0); // select some configs
-                        
-			if(configs.size > 2 && game is GameHub.Data.Sources.GOG.GOGGame)
+			if(configs.size > 2 && runnable is GameHub.Data.Sources.GOG.GOGGame)
 			{
 				foreach(var conf in configs)
 				{
@@ -174,9 +174,9 @@ namespace GameHub.Data.Compat
 				{
 					foreach(var exeext in DOSBOX_WIN_EXECUTABLE_EXTENSIONS)
 					{
-						if(game.install_dir.get_child(dirname).get_child(exename + exeext).query_exists())
+						if(runnable.install_dir.get_child(dirname).get_child(exename + exeext).query_exists())
 						{
-							wdir = game.install_dir.get_child(dirname);
+							wdir = runnable.install_dir.get_child(dirname);
 							bundled_win_dosbox_found = true;
 							break;
 						}

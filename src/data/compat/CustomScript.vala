@@ -60,14 +60,14 @@ GH_GAME_NAME_ESCAPED="${10}"
 			};
 		}
 
-		public override bool can_run(Runnable game)
+		public override bool can_run(Runnable runnable)
 		{
 			return true;
 		}
 
 		public override async void run(Runnable runnable)
 		{
-			var gh_dir = FSUtils.mkdir(runnable.install_dir.get_path(), COMPAT_DATA_DIR);
+			var gh_dir = FSUtils.mkdir(runnable.install_dir.get_path(), FSUtils.GAMEHUB_DIR);
 			var script = gh_dir.get_child(SCRIPT);
 			if(script.query_exists())
 			{
@@ -91,15 +91,15 @@ GH_GAME_NAME_ESCAPED="${10}"
 			}
 		}
 
-		public override async void run_emulator(Emulator emu, Game game)
+		public override async void run_emulator(Emulator emu, Game? game)
 		{
-			var gh_dir = FSUtils.mkdir(emu.install_dir.get_path(), COMPAT_DATA_DIR);
+			var gh_dir = FSUtils.mkdir(emu.install_dir.get_path(), FSUtils.GAMEHUB_DIR);
 			var script = gh_dir.get_child(SCRIPT);
 			if(script.query_exists())
 			{
 				Utils.run({"chmod", "+x", script.get_path()});
 				var executable_path = emu.executable != null ? emu.executable.get_path() : "null";
-				var game_executable_path = game.executable != null ? game.executable.get_path() : "null";
+				var game_executable_path = game != null && game.executable != null ? game.executable.get_path() : "null";
 				string[] cmd = { script.get_path(), executable_path, emu.id, emu.name, game_executable_path, game.id, game.full_id, game.name, game.escaped_name };
 				yield Utils.run_thread(cmd, emu.install_dir.get_path());
 			}
@@ -109,19 +109,19 @@ GH_GAME_NAME_ESCAPED="${10}"
 			}
 		}
 
-		public void edit_script(Runnable game)
+		public void edit_script(Runnable runnable)
 		{
-			var gh_dir = FSUtils.mkdir(game.install_dir.get_path(), COMPAT_DATA_DIR);
+			var gh_dir = FSUtils.mkdir(runnable.install_dir.get_path(), FSUtils.GAMEHUB_DIR);
 			var script = gh_dir.get_child(SCRIPT);
 			if(!script.query_exists())
 			{
 				try
 				{
-					if(game is Game)
+					if(runnable is Game)
 					{
 						FileUtils.set_contents(script.get_path(), SCRIPT_TEMPLATE, SCRIPT_TEMPLATE.length);
 					}
-					else if(game is Emulator)
+					else if(runnable is Emulator)
 					{
 						FileUtils.set_contents(script.get_path(), EMU_SCRIPT_TEMPLATE, EMU_SCRIPT_TEMPLATE.length);
 					}

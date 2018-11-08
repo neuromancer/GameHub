@@ -72,7 +72,7 @@ namespace GameHub.Data.Sources.User
 			icon = Tables.Games.ICON.get(s);
 			image = Tables.Games.IMAGE.get(s);
 			install_dir = FSUtils.file(Tables.Games.INSTALL_PATH.get(s)) ?? FSUtils.file(FSUtils.Paths.GOG.Games, escaped_name);
-			executable = FSUtils.file(Tables.Games.EXECUTABLE.get(s)) ?? FSUtils.file(install_dir.get_path(), "start.sh");
+			executable_path = Tables.Games.EXECUTABLE.get(s);
 			compat_tool = Tables.Games.COMPAT_TOOL.get(s);
 			compat_tool_settings = Tables.Games.COMPAT_TOOL_SETTINGS.get(s);
 			arguments = Tables.Games.ARGUMENTS.get(s);
@@ -112,6 +112,9 @@ namespace GameHub.Data.Sources.User
 		public override async void update_game_info()
 		{
 			update_status();
+
+			mount_overlays();
+
 			if(installer == null && info != null && info.length > 0)
 			{
 				var i = Parser.parse_json(info).get_object();
@@ -126,10 +129,10 @@ namespace GameHub.Data.Sources.User
 
 			if(installer == null) return;
 
-			var installers = new ArrayList<Game.Installer>();
+			var installers = new ArrayList<Runnable.Installer>();
 			installers.add(installer);
 
-			var wnd = new GameHub.UI.Dialogs.GameInstallDialog(this, installers);
+			var wnd = new GameHub.UI.Dialogs.InstallDialog(this, installers);
 
 			wnd.cancelled.connect(() => Idle.add(install.callback));
 
@@ -148,6 +151,7 @@ namespace GameHub.Data.Sources.User
 
 		public override async void uninstall()
 		{
+			yield umount_overlays();
 			remove();
 		}
 
@@ -168,9 +172,9 @@ namespace GameHub.Data.Sources.User
 
 		public override void update_status()
 		{
-			var state = executable != null && executable.query_exists() ? Game.State.INSTALLED : Game.State.UNINSTALLED;
-			status = new Game.Status(state);
-			if(state == Game.State.INSTALLED)
+			var exec = executable;
+			status = new Game.Status(exec != null && exec.query_exists() ? Game.State.INSTALLED : Game.State.UNINSTALLED);
+			if(status.state == Game.State.INSTALLED)
 			{
 				remove_tag(Tables.Tags.BUILTIN_UNINSTALLED);
 				add_tag(Tables.Tags.BUILTIN_INSTALLED);
@@ -182,7 +186,7 @@ namespace GameHub.Data.Sources.User
 			}
 		}
 
-		public class Installer: Game.Installer
+		public class Installer: Runnable.Installer
 		{
 			private string game_name;
 			public override string name { get { return game_name; } }
@@ -192,7 +196,7 @@ namespace GameHub.Data.Sources.User
 				game_name = game.name;
 				id = "installer";
 				platform = installer.get_path().has_suffix(".exe") ? Platform.WINDOWS : Platform.LINUX;
-				parts.add(new Game.Installer.Part("installer", installer.get_uri(), full_size, installer, installer));
+				parts.add(new Runnable.Installer.Part("installer", installer.get_uri(), full_size, installer, installer));
 			}
 		}
 	}

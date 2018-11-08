@@ -479,6 +479,34 @@ namespace GameHub.UI.Views.GamesView
 			}
 		}
 
+		private void update_status()
+		{
+			Idle.add(() => {
+				if(status_changed && loading_sources.size > 0)
+				{
+					string[] src_names = {};
+					foreach(var s in loading_sources)
+					{
+						src_names += s.name;
+					}
+					status_text = _("Loading games from %s").printf(string.joinv(", ", src_names));
+				}
+				if(status_text != null && status_text.length > 0)
+				{
+					status_overlay.label = status_text;
+					status_overlay.active = true;
+					status_overlay.show();
+				}
+				else
+				{
+					status_overlay.active = false;
+					status_overlay.hide();
+				}
+				status_changed = false;
+				return Source.REMOVE;
+			});
+		}
+
 		private void update_view()
 		{
 			show_games();
@@ -492,29 +520,7 @@ namespace GameHub.UI.Views.GamesView
 			var games = src == null ? games_grid.get_children().length() : src.games_count;
 			titlebar.subtitle = (src == null ? "" : src.name + ": ") + ngettext("%u game", "%u games", games).printf(games);
 
-			if(status_changed && loading_sources.size > 0)
-			{
-				string[] src_names = {};
-				foreach(var s in loading_sources)
-				{
-					src_names += s.name;
-				}
-				status_text = _("Loading games from %s").printf(string.joinv(", ", src_names));
-			}
-
-			if(status_text != null)
-			{
-				status_overlay.label = status_text;
-				status_overlay.active = true;
-				status_overlay.show();
-			}
-			else
-			{
-				status_overlay.active = false;
-				status_overlay.hide();
-			}
-
-			status_changed = false;
+			update_status();
 
 			foreach(var s in sources)
 			{
@@ -623,7 +629,7 @@ namespace GameHub.UI.Views.GamesView
 
 			if(!cached)
 			{
-				merge_game(g);
+				//merge_game(g);
 				new_games_added = true;
 			}
 
@@ -878,10 +884,13 @@ namespace GameHub.UI.Views.GamesView
 			if(in_destruction()) return;
 			status_text = _("Updating game info");
 			status_changed = true;
-			postpone_view_update();
+			update_status();
 			Utils.thread("Updating", () => {
 				foreach(var src in sources)
 				{
+					status_text = _("Updating %s game info").printf(src.name);
+					status_changed = true;
+					update_status();
 					foreach(var game in src.games)
 					{
 						game.update_game_info.begin();
@@ -890,7 +899,7 @@ namespace GameHub.UI.Views.GamesView
 				}
 				status_text = null;
 				status_changed = true;
-				postpone_view_update();
+				update_status();
 			});
 		}
 
@@ -899,7 +908,7 @@ namespace GameHub.UI.Views.GamesView
 			if(!ui_settings.merge_games || in_destruction()) return;
 			status_text = _("Merging games");
 			status_changed = true;
-			postpone_view_update();
+			update_status();
 			Utils.thread("Merging", () => {
 				foreach(var src in sources)
 				{
@@ -907,7 +916,7 @@ namespace GameHub.UI.Views.GamesView
 				}
 				status_text = null;
 				status_changed = true;
-				postpone_view_update();
+				update_status();
 			});
 		}
 
@@ -915,7 +924,7 @@ namespace GameHub.UI.Views.GamesView
 		{
 			status_text = _("Merging games from %s").printf(src.name);
 			status_changed = true;
-			postpone_view_update();
+			update_status();
 			Utils.thread("Merging-" + src.id, () => {
 				foreach(var game in src.games)
 				{
@@ -923,7 +932,7 @@ namespace GameHub.UI.Views.GamesView
 				}
 				status_text = null;
 				status_changed = true;
-				postpone_view_update();
+				update_status();
 			});
 		}
 
@@ -932,7 +941,7 @@ namespace GameHub.UI.Views.GamesView
 			if(!ui_settings.merge_games || in_destruction() || game is Sources.GOG.GOGGame.DLC) return;
 			status_text = _("Merging %s (%s)").printf(game.name, game.full_id);
 			status_changed = true;
-			postpone_view_update();
+			update_status();
 			Utils.thread("Merging-" + game.full_id, () => {
 				foreach(var src in sources)
 				{
@@ -943,7 +952,7 @@ namespace GameHub.UI.Views.GamesView
 				}
 				status_text = null;
 				status_changed = true;
-				postpone_view_update();
+				update_status();
 			});
 		}
 
@@ -1032,6 +1041,11 @@ namespace GameHub.UI.Views.GamesView
 				b.emit_key_event(press);
 				debug("[Gamepad] Button %s: %s (%s) [%d]", (press ? "pressed" : "released"), b.name, b.long_name, btn);
 				ui_update_gamepad_mode();
+
+				if(!press && b == Gamepad.BTN_HOME && !window.has_focus && !RunnableIsLaunched)
+				{
+					window.get_window().focus(Gdk.CURRENT_TIME);
+				}
 			}
 		}
 

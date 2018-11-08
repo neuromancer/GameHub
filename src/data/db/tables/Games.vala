@@ -146,7 +146,6 @@ namespace GameHub.Data.DB.Tables
 			var tags = "";
 			foreach(var t in game.tags)
 			{
-				if(t == Tables.Tags.BUILTIN_INSTALLED) continue;
 				if(tags.length > 0) tags += ",";
 				tags += t.id;
 			}
@@ -159,7 +158,7 @@ namespace GameHub.Data.DB.Tables
 			ICON.bind(s, game.icon);
 			IMAGE.bind(s, game.image);
 			TAGS.bind(s, tags);
-			EXECUTABLE.bind(s, game.executable == null || !game.executable.query_exists() ? null : game.executable.get_path());
+			EXECUTABLE.bind(s, game.executable_path == null ? null : game.executable_path);
 			INSTALL_PATH.bind(s, game.install_dir == null || !game.install_dir.query_exists() ? null : game.install_dir.get_path());
 			PLATFORMS.bind(s, platforms);
 			COMPAT_TOOL.bind(s, game.compat_tool);
@@ -261,12 +260,14 @@ namespace GameHub.Data.DB.Tables
 
 			if(src != null)
 			{
-				res = db.prepare_v2("SELECT * FROM `games` WHERE `source` = ? ORDER BY `name` ASC", -1, out st);
+				res = db.prepare_v2("SELECT * FROM `games` WHERE `source` = ? ORDER BY (CASE WHEN `tags` LIKE ? THEN 1 ELSE 2 END), `name` ASC", -1, out st);
 				res = st.bind_text(1, src.id);
+				res = st.bind_text(2, "%" + Tags.BUILTIN_INSTALLED.id + "%");
 			}
 			else
 			{
-				res = db.prepare_v2("SELECT * FROM `games` ORDER BY `name` ASC", -1, out st);
+				res = db.prepare_v2("SELECT * FROM `games` ORDER BY (CASE WHEN `tags` LIKE ? THEN 1 ELSE 2 END), `name` ASC", -1, out st);
+				res = st.bind_text(1, "%" + Tags.BUILTIN_INSTALLED.id + "%");
 			}
 
 			if(res != Sqlite.OK)

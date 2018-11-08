@@ -27,11 +27,16 @@ namespace GameHub.Data
 		private bool is_removed = false;
 		public signal void removed();
 
+		public override File? executable { owned get; set; }
+		public Installer? installer;
+
 		public Emulator.empty(){}
 
-		public Emulator(string name, File exec, string args, string? compat=null)
+		public Emulator(string name, File dir, File exec, string args, string? compat=null)
 		{
 			this.name = name;
+
+			install_dir = dir;
 
 			executable = exec;
 			arguments = args;
@@ -79,8 +84,32 @@ namespace GameHub.Data
 
 			platforms.clear();
 			platforms.add(Platform.LINUX);
+		}
 
-			install_dir = executable.get_parent();
+		public override async void install()
+		{
+			update_status();
+
+			if(installer == null || install_dir == null) return;
+
+			var installers = new ArrayList<Runnable.Installer>();
+			installers.add(installer);
+
+			var wnd = new GameHub.UI.Dialogs.InstallDialog(this, installers);
+
+			wnd.cancelled.connect(() => Idle.add(install.callback));
+
+			wnd.install.connect((installer, dl_only, tool) => {
+				installer.install.begin(this, dl_only, tool, (obj, res) => {
+					installer.install.end(res);
+					Idle.add(install.callback);
+				});
+			});
+
+			wnd.show_all();
+			wnd.present();
+
+			yield;
 		}
 
 		public string[] get_args(Game? game=null, File? exec=null)
@@ -97,18 +126,30 @@ namespace GameHub.Data
 				var variables = new HashMap<string, string>();
 				variables.set("emu", name.replace(": ", " - ").replace(":", ""));
 				variables.set("emu_dir", install_dir.get_path());
-				variables.set("game", game.name.replace(": ", " - ").replace(":", ""));
-				variables.set("file", game.executable.get_path());
-				variables.set("game_dir", game.install_dir.get_path());
+				if(game != null)
+				{
+					variables.set("game", game.name.replace(": ", " - ").replace(":", ""));
+					variables.set("file", game.executable.get_path());
+					variables.set("game_dir", game.install_dir.get_path());
+				}
+				else
+				{
+					variables.set("game", "");
+					variables.set("file", "");
+					variables.set("game_dir", "");
+				}
 				var args = arguments.split(" ");
 				foreach(var arg in args)
 				{
-					if(game != null && arg == "$game_args")
+					if(arg == "$game_args")
 					{
-						var game_args = game.arguments.split(" ");
-						foreach(var game_arg in game_args)
+						if(game != null)
 						{
-							result_args += game_arg;
+							var game_args = game.arguments.split(" ");
+							foreach(var game_arg in game_args)
+							{
+								result_args += game_arg;
+							}
 						}
 						continue;
 					}
@@ -135,7 +176,7 @@ namespace GameHub.Data
 			}
 		}
 
-		public async void run_game(Game game)
+		public async void run_game(Game? game)
 		{
 			if(use_compat)
 			{
@@ -143,13 +184,13 @@ namespace GameHub.Data
 				return;
 			}
 
-			if(executable.query_exists() && game.executable.query_exists())
+			if(executable.query_exists())
 			{
 				yield Utils.run_thread(get_args(game, executable), executable.get_parent().get_path(), null, true);
 			}
 		}
 
-		public async void run_game_compat(Game game)
+		public async void run_game_compat(Game? game)
 		{
 			new UI.Dialogs.CompatRunDialog(this, false, game);
 		}
@@ -162,6 +203,20 @@ namespace GameHub.Data
 		public static uint hash(Emulator emu)
 		{
 			return str_hash(emu.id);
+		}
+
+		public class Installer: Runnable.Installer
+		{
+			private string emu_name;
+			public override string name { get { return emu_name; } }
+
+			public Installer(Emulator emu, File installer)
+			{
+				emu_name = emu.name;
+				id = "installer";
+				platform = installer.get_path().has_suffix(".exe") ? Platform.WINDOWS : Platform.LINUX;
+				parts.add(new Runnable.Installer.Part("installer", installer.get_uri(), full_size, installer, installer));
+			}
 		}
 	}
 }
