@@ -17,14 +17,13 @@ along with GameHub.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 using GameHub.Utils;
-
 using GameHub.Data.Sources.Steam;
 
 namespace GameHub.Data.Compat
 {
 	public class Proton: Wine
 	{
-		protected override string install_postfix() { return @"/$(COMPAT_DATA_DIR)/proton_$(appid)/pfx/drive_c/Game"; } 
+		protected override string install_postfix() { return @"/$(FSUtils.GAMEHUB_DIR)/proton_$(appid)/pfx/drive_c/Game"; }
 		public const string[] APPIDS = {"961940", "930400", "858280"}; // 3.16, 3.7 Beta, 3.7
 
 		public string appid { get; construct; }

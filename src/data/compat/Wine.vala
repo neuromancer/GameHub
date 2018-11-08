@@ -97,8 +97,7 @@ namespace GameHub.Data.Compat
 
 		protected virtual async string[] prepare_installer_args(Runnable runnable)
 		{
-			var win_path = yield convert_path(game, game.install_dir, install_postfix() );
-			//var win_path = yield convert_path(runnable, runnable.install_dir.get_child(tmp_root));
+			var win_path = yield convert_path(runnable, runnable.install_dir, install_postfix() );
 
 			string[] opts = {};
 
@@ -135,7 +134,7 @@ namespace GameHub.Data.Compat
 		public override async void run_emulator(Emulator emu, Game? runnable)
 		{
 			if(!can_run(emu)) return;
-			yield exec(emu, emu.executable, emu.install_dir, emu.get_args(runnable));
+			yield exec(emu, emu.executable, emu.install_dir, "", emu.get_args(runnable));
 		}
 
 		protected virtual async void exec(Runnable runnable, File file, File dir, string s="", string[]? args=null, bool parse_opts=true)
