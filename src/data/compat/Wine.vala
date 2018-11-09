@@ -24,7 +24,7 @@ namespace GameHub.Data.Compat
 {
 	public class Wine: CompatTool
 	{
-                protected virtual string install_postfix() { return "/_gamehub/"+binary+"_"+arch+"/drive_c/Game"; }
+                protected virtual string install_postfix() { return @"/$(FSUtils.GAMEHUB_DIR)/"+binary+"_"+arch+"/drive_c/Game"; }
 		public string binary { get; construct; default = "wine"; }
 		public string arch { get; construct; default = "win64"; }
 		public File? wine_binary { get; protected set; }
@@ -149,9 +149,11 @@ namespace GameHub.Data.Compat
 
 		protected virtual File get_wineprefix(Runnable runnable)
 		{
-			var prefix = FSUtils.mkdir(runnable.install_dir.get_path(), @"$(FSUtils.GAMEHUB_DIR)/$(FSUtils.COMPAT_DATA_DIR)/$(binary)_$(arch)");
-			var dosdevices = prefix.get_child("dosdevices");
+			var prefix = FSUtils.mkdir(runnable.install_dir.get_path(), @"$(FSUtils.GAMEHUB_DIR)/$(binary)_$(arch)");
 
+			/*
+                        var dosdevices = prefix.geti_child("dosdevices");
+                        
 			if(FSUtils.file(runnable.install_dir.get_path(), @"$(FSUtils.GAMEHUB_DIR)/$(binary)_$(arch)").query_exists())
 			{
 				Utils.run({"bash", "-c", @"mv -f $(FSUtils.GAMEHUB_DIR)/$(binary)_$(arch) $(FSUtils.GAMEHUB_DIR)/$(FSUtils.COMPAT_DATA_DIR)/$(binary)_$(arch)"}, runnable.install_dir.get_path());
@@ -162,6 +164,7 @@ namespace GameHub.Data.Compat
 			{
 				Utils.run({"ln", "-nsf", "../../../../", "d:"}, dosdevices.get_path());
 			}
+                        */
 			return prefix;
 		}
 
