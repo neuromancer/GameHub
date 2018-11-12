@@ -34,6 +34,8 @@ namespace GameHub.Data
 
 		public string? arguments { get; set; }
 
+		public bool is_running { get; set; default = false; }
+
 		public ArrayList<Platform> platforms { get; protected set; default = new ArrayList<Platform>(); }
 		public virtual bool is_supported(Platform? platform=null, bool with_compat=true)
 		{
@@ -327,7 +329,7 @@ namespace GameHub.Data
 						game = runnable as Game;
 					}
 
-					if(game != null) game.status = new Game.Status(Game.State.DOWNLOADING, null);
+					if(game != null) game.status = new Game.Status(Game.State.DOWNLOADING, game, null);
 
 					var files = new ArrayList<File>();
 
@@ -338,7 +340,7 @@ namespace GameHub.Data
 							if(dl.remote != part.remote) return;
 							if(game != null)
 							{
-								game.status = new Game.Status(Game.State.DOWNLOADING, dl);
+								game.status = new Game.Status(Game.State.DOWNLOADING, game, dl);
 								dl.status_change.connect(s => {
 									game.status_change(game.status);
 								});
@@ -363,7 +365,7 @@ namespace GameHub.Data
 						p++;
 					}
 
-					if(game != null) game.status = new Game.Status(Game.State.UNINSTALLED);
+					if(game != null) game.status = new Game.Status(Game.State.UNINSTALLED, game);
 					runnable.update_status();
 
 					if(dl_only || files.size == 0) return;
@@ -414,7 +416,7 @@ namespace GameHub.Data
 								break;
 						}
 
-						if(game != null) game.status = new Game.Status(Game.State.INSTALLING);
+						if(game != null) game.status = new Game.Status(Game.State.INSTALLING, game);
 
 						if(cmd != null)
 						{
