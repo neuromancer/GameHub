@@ -96,14 +96,14 @@ namespace GameHub.Data.Compat
 
 		protected override File get_wineprefix(Runnable runnable)
 		{
-			var prefix = FSUtils.mkdir(runnable.install_dir.get_path(), @"$(FSUtils.GAMEHUB_DIR)/$(FSUtils.COMPAT_DATA_DIR)/$(id)/pfx");
-			var dosdevices = prefix.get_child("dosdevices");
+			var prefix = FSUtils.mkdir(runnable.install_dir.get_path(), @"$(FSUtils.GAMEHUB_DIR)/proton_$(appid)/pfx");
+                        var dosdevices = prefix.get_child("dosdevices");
 
-			if(FSUtils.file(runnable.install_dir.get_path(), @"$(FSUtils.GAMEHUB_DIR)/$(id)").query_exists())
+			/*if(FSUtils.file(runnable.install_dir.get_path(), @"$(FSUtils.GAMEHUB_DIR)/$(id)").query_exists())
 			{
 				Utils.run({"bash", "-c", @"mv -f $(FSUtils.GAMEHUB_DIR)/$(id) $(FSUtils.GAMEHUB_DIR)/$(FSUtils.COMPAT_DATA_DIR)/$(id)"}, runnable.install_dir.get_path());
 				FSUtils.rm(dosdevices.get_child("d:").get_path());
-			}
+			}*/
 
 			if(dosdevices.get_child("c:").query_exists() && !dosdevices.get_child("d:").query_exists())
 			{
@@ -116,7 +116,7 @@ namespace GameHub.Data.Compat
 		{
 			var env = Environ.get();
 
-			var compatdata = FSUtils.mkdir(runnable.install_dir.get_path(), @"$(FSUtils.GAMEHUB_DIR)/$(FSUtils.COMPAT_DATA_DIR)/$(id)");
+			var compatdata = FSUtils.mkdir(runnable.install_dir.get_path(), @"$(FSUtils.GAMEHUB_DIR)/proton_$(appid)");
 			if(compatdata != null && compatdata.query_exists())
 			{
 				env = Environ.set_variable(env, "STEAM_COMPAT_CLIENT_INSTALL_PATH", FSUtils.Paths.Steam.Home);

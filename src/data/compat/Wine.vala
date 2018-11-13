@@ -103,7 +103,7 @@ namespace GameHub.Data.Compat
 
 			if(install_opt_innosetup_args.enabled)
 			{
-				opts = { "/SP-", "/NOCANCEL", "/NOGUI", "/NOICONS", @"/DIR=$(win_path)", "/LOG=D:\\install.log" };
+				opts = { "/SP-", "/NOCANCEL", "/NOGUI", "/NOICONS", @"/DIR=$(win_path)", "/LOG=C:\\install.log" };
 			}
 
 			foreach(var opt in install_options)
