@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.tkashkin.gamehub\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-13 04:37+0300\n"
+"POT-Creation-Date: 2018-11-21 05:51+0300\n"
 "PO-Revision-Date: 2018-11-08 23:20+0300\n"
 "Last-Translator: Anatoliy Kashkin <tkashkin@gmail.com>\n"
 "Language-Team: none\n"
@@ -47,50 +47,55 @@ msgstr "Выберите папку"
 msgid "Part %u of %u: "
 msgstr "Часть %u из %u: "
 
-#: src/data/Game.vala:422
+#: src/data/Game.vala:424
 msgctxt "status"
 msgid "Running"
 msgstr "Запущена"
 
-#: src/data/Game.vala:425
+#: src/data/Game.vala:427
 msgctxt "status"
 msgid "Installed"
 msgstr "Установлена"
 
-#: src/data/Game.vala:426
+#: src/data/Game.vala:428
 msgctxt "status"
 msgid "Installing"
 msgstr "Установка"
 
-#: src/data/Game.vala:427
+#: src/data/Game.vala:429
 msgctxt "status"
 msgid "Download started"
 msgstr "Загрузка начата"
 
-#: src/data/Game.vala:429
+#: src/data/Game.vala:431
 msgctxt "status"
 msgid "Not installed"
 msgstr "Не установлена"
 
-#: src/data/Game.vala:439
+#: src/data/Game.vala:441
 msgctxt "status_header"
 msgid "Installed"
 msgstr "Установленные"
 
-#: src/data/Game.vala:440
+#: src/data/Game.vala:442
 msgctxt "status_header"
 msgid "Installing"
 msgstr "Установка"
 
-#: src/data/Game.vala:441
+#: src/data/Game.vala:443
 msgctxt "status_header"
 msgid "Downloading"
 msgstr "Загрузка"
 
-#: src/data/Game.vala:443
+#: src/data/Game.vala:445
 msgctxt "status_header"
 msgid "Not installed"
 msgstr "Не установленные"
+
+#: src/data/GameSource.vala:31
+#, c-format
+msgid "%s games"
+msgstr "Игры из %s"
 
 #: src/data/sources/steam/Steam.vala:43
 msgid "Your SteamID will be read from Steam configuration file"
@@ -267,20 +272,24 @@ msgstr "Использовать тёмную тему"
 msgid "Compact list"
 msgstr "Компактный список"
 
-#: src/ui/dialogs/SettingsDialog/tabs/UI.vala:41
+#: src/ui/dialogs/SettingsDialog/tabs/UI.vala:38
+msgid "Show platform icons in grid view"
+msgstr ""
+
+#: src/ui/dialogs/SettingsDialog/tabs/UI.vala:42
 msgid "Merge games from different sources"
 msgstr "Объединять игры из разных источников"
 
-#: src/ui/dialogs/SettingsDialog/tabs/UI.vala:45
+#: src/ui/dialogs/SettingsDialog/tabs/UI.vala:46
 msgid "Show non-native games"
 msgstr "Показывать ненативные игры"
 
-#: src/ui/dialogs/SettingsDialog/tabs/UI.vala:46
+#: src/ui/dialogs/SettingsDialog/tabs/UI.vala:47
 msgid "Use compatibility layers and consider Windows games compatible"
 msgstr ""
 "Использовать слои совместимости и считать игры для Windows совместимыми"
 
-#: src/ui/dialogs/SettingsDialog/tabs/UI.vala:50
+#: src/ui/dialogs/SettingsDialog/tabs/UI.vala:51
 msgid "Use imported tags"
 msgstr "Использовать импортированные теги"
 
@@ -459,7 +468,7 @@ msgid "%s: Properties"
 msgstr "%s: Свойства"
 
 #: src/ui/dialogs/GamePropertiesDialog.vala:66
-#: src/ui/views/GamesView/FiltersPopover.vala:152
+#: src/ui/views/GamesView/FiltersPopover.vala:153
 msgid "Tags"
 msgstr "Теги"
 
@@ -602,11 +611,6 @@ msgstr "Список"
 msgid "All games"
 msgstr "Все игры"
 
-#: src/ui/views/GamesView/GamesView.vala:170
-#, c-format
-msgid "%s games"
-msgstr "Игры из %s"
-
 #: src/ui/views/GamesView/GamesView.vala:177
 msgid "Downloads"
 msgstr "Загрузки"
@@ -690,25 +694,25 @@ msgstr ""
 msgid "Privacy"
 msgstr "Приватность"
 
-#: src/ui/views/GamesView/GamesView.vala:885
+#: src/ui/views/GamesView/GamesView.vala:892
 msgid "Updating game info"
 msgstr "Обновление информации об игре"
 
-#: src/ui/views/GamesView/GamesView.vala:891
+#: src/ui/views/GamesView/GamesView.vala:898
 #, c-format
 msgid "Updating %s game info"
 msgstr "Обновление информации об играх из %s"
 
-#: src/ui/views/GamesView/GamesView.vala:909
+#: src/ui/views/GamesView/GamesView.vala:916
 msgid "Merging games"
 msgstr "Объединение игр"
 
-#: src/ui/views/GamesView/GamesView.vala:925
+#: src/ui/views/GamesView/GamesView.vala:932
 #, c-format
 msgid "Merging games from %s"
 msgstr "Объединение игр из %s"
 
-#: src/ui/views/GamesView/GamesView.vala:942
+#: src/ui/views/GamesView/GamesView.vala:949
 #, c-format
 msgid "Merging %s (%s)"
 msgstr "Объединение %s (%s)"
