@@ -1,19 +1,20 @@
-# Norwegian Bokmal translations for com.github.tkashkin.gamehub package.
-# Copyright (C) 2018 THE com.github.tkashkin.gamehub'S COPYRIGHT HOLDER
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the com.github.tkashkin.gamehub package.
-# Automatically generated, 2018.
+# jonathanschaefer <jonathanschaefer@protonmail.com>, 2018.
+# ssantos <ssantos@web.de>, 2018.
 # Anatoliy Kashkin <tkashkin@gmail.com>, 2018.
-# Allan Nordhøy <epost@anotheragency.no>, 2018.
+# Ettore Atalan <atalanttore@googlemail.com>, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: com.github.tkashkin.gamehub\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-11-28 12:05+0300\n"
-"PO-Revision-Date: 2018-11-23 04:07+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
-"Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/gamehub/"
-"translations/nb_NO/>\n"
-"Language: nb_NO\n"
+"PO-Revision-Date: 2018-11-30 04:58+0000\n"
+"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/gamehub/"
+"translations/de/>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,123 +25,123 @@ msgstr ""
 #: src/ui/dialogs/SettingsDialog/tabs/Emulators.vala:226
 #: src/ui/dialogs/GamePropertiesDialog.vala:220
 msgid "Select executable"
-msgstr "Velg kjørbar fil"
+msgstr "Ausführbare Datei auswählen"
 
 #: src/data/Runnable.vala:69 src/data/Runnable.vala:71
 #: src/data/Runnable.vala:140 src/ui/views/GamesView/GamesView.vala:352
 #: src/ui/widgets/FileChooserEntry.vala:53
 #: src/ui/widgets/FileChooserEntry.vala:55
 msgid "Select"
-msgstr "Velg"
+msgstr "Auswählen"
 
 #: src/data/Runnable.vala:69 src/data/Runnable.vala:71
 #: src/data/Runnable.vala:139 src/ui/widgets/FileChooserEntry.vala:53
 #: src/ui/widgets/FileChooserEntry.vala:55
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr "Abbrechen"
 
 #: src/data/Runnable.vala:125 src/ui/widgets/FileChooserEntry.vala:47
 msgid "Select directory"
-msgstr "Velg mappe"
+msgstr "Ordner auswählen"
 
 #: src/data/Runnable.vala:354
 #, c-format
 msgid "Part %u of %u: "
-msgstr "Del %u av %u: "
+msgstr "Teil %u von %u: "
 
 #: src/data/Game.vala:424
 msgctxt "status"
 msgid "Running"
-msgstr "Kjører"
+msgstr "Läuft"
 
 #: src/data/Game.vala:427
 msgctxt "status"
 msgid "Installed"
-msgstr "Installert"
+msgstr "Installiert"
 
 #: src/data/Game.vala:428
 msgctxt "status"
 msgid "Installing"
-msgstr "Installerer"
+msgstr "Installiere"
 
 #: src/data/Game.vala:429
 msgctxt "status"
 msgid "Download started"
-msgstr "Nedlasting startet"
+msgstr "Download gestartet"
 
 #: src/data/Game.vala:431
 msgctxt "status"
 msgid "Not installed"
-msgstr "Ikke installert"
+msgstr "Nicht installiert"
 
 #: src/data/Game.vala:441
 msgctxt "status_header"
 msgid "Installed"
-msgstr "Installert"
+msgstr "Installiert"
 
 #: src/data/Game.vala:442
 msgctxt "status_header"
 msgid "Installing"
-msgstr "Installerer"
+msgstr "Installation"
 
 #: src/data/Game.vala:443
 msgctxt "status_header"
 msgid "Downloading"
-msgstr "Laster ned"
+msgstr "herunterladen"
 
 #: src/data/Game.vala:445
 msgctxt "status_header"
 msgid "Not installed"
-msgstr "Ikke installert"
+msgstr "Nicht installiert"
 
 #: src/data/GameSource.vala:31
 #, c-format
 msgid "%s games"
-msgstr "%s spill"
+msgstr "%s Spiele"
 
 #: src/data/sources/steam/Steam.vala:43
 msgid "Your SteamID will be read from Steam configuration file"
-msgstr "Din SteamID vil bli lest fra Steam-oppsettsfilen"
+msgstr "Deine SteamID wird aus der Steam Konfigurationsdatei gelesen"
 
 #: src/data/sources/steam/Steam.vala:46
 msgid ""
 "Steam config file not found.\n"
 "Login into your account in Steam client and return to GameHub"
 msgstr ""
-"Fant ikke Steamoppsettsfilen.\n"
-"Logg inn på din konto i Steamklienten og kom tilbake til GameHub"
+"Steam Konfigurationsdatei nicht gefunden.\n"
+"Bitte melde dich in deinen Account in Steam an"
 
 #: src/data/sources/user/User.vala:30
 msgid "User games"
-msgstr "Brukerspill"
+msgstr "Benutzerspiele"
 
 #: src/data/db/tables/Tags.vala:192
 msgctxt "tag"
 msgid "Favorites"
-msgstr "Favoritter"
+msgstr "Favoriten"
 
 #: src/data/db/tables/Tags.vala:193
 msgctxt "tag"
 msgid "Not installed"
-msgstr "Ikke installert"
+msgstr "Nicht installiert"
 
 #: src/data/db/tables/Tags.vala:194
 msgctxt "tag"
 msgid "Installed"
-msgstr "Installert"
+msgstr "Installiert"
 
 #: src/data/db/tables/Tags.vala:195
 msgctxt "tag"
 msgid "Hidden"
-msgstr "Skjult"
+msgstr "Versteckt"
 
 #: src/data/compat/CustomScript.vala:59
 msgid "Edit script"
-msgstr "Rediger skript"
+msgstr "Skript bearbeiten"
 
 #: src/data/compat/CustomScript.vala:59
 msgid "Edit custom script"
-msgstr "Rediger egendefinert skript"
+msgstr "Benutzerdefiniertes Skript bearbeiten"
 
 #: src/data/compat/WineWrap.vala:57
 #: src/ui/dialogs/SettingsDialog/tabs/Emulators.vala:206
@@ -148,88 +149,88 @@ msgstr "Rediger egendefinert skript"
 #: src/ui/views/GamesView/GameContextMenu.vala:42
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:209
 msgid "Run"
-msgstr "Kjør"
+msgstr "Ausführen"
 
 #: src/data/compat/WineWrap.vala:60
 msgid "Show WineWrap menu"
-msgstr ""
+msgstr "WineWrap-Menü anzeigen"
 
 #: src/data/compat/WineWrap.vala:63 src/data/compat/Proton.vala:80
 #: src/data/compat/Wine.vala:80
 msgid "Kill apps in prefix"
-msgstr "Drep programmer i prefiks"
+msgstr "Apps im Präfix beenden"
 
 #: src/data/compat/Proton.vala:43 src/data/compat/Wine.vala:49
 msgid "Environment variables"
-msgstr "Miljøvariabler"
+msgstr "Umgebungsvariablen"
 
 #: src/data/compat/Proton.vala:47
 msgid "Disable esync"
-msgstr "Skru av esync"
+msgstr "esync deaktivieren"
 
 #: src/data/compat/Proton.vala:48
 msgid "Disable DirectX 11 compatibility layer"
-msgstr "Skru av DirextX 11-kompabilitetslag"
+msgstr "DirectX11 Kompatibilitätsschicht deaktivieren"
 
 #: src/data/compat/Proton.vala:49
 msgid "Use WineD3D11 as DirectX 11 compatibility layer"
-msgstr "Bruk WineD3D11 som DirectX 11-kompabilitetslag"
+msgstr "WineD3D11 als DirectX 11 Kompatibilitätsschicht verwenden"
 
 #: src/data/compat/Proton.vala:50
 msgid "Show DXVK info overlay"
-msgstr "Vis DXVK-infooverlag"
+msgstr "DXVK-Info-Overlay anzeigen"
 
 #: src/data/compat/Proton.vala:68 src/data/compat/Wine.vala:68
 msgid "Open prefix directory"
-msgstr "Åpne prefiks-mappe"
+msgstr "Präfixverzeichnis öffnen"
 
 #: src/data/compat/Proton.vala:71 src/data/compat/Wine.vala:71
 msgid "Run winecfg"
-msgstr "Kjør winecfg"
+msgstr "winecfg ausführen"
 
 #: src/data/compat/Proton.vala:74 src/data/compat/Wine.vala:74
 msgid "Run winetricks"
-msgstr "Kjør winetricks"
+msgstr "winetricks ausführen"
 
 #: src/data/compat/Proton.vala:77 src/data/compat/Wine.vala:77
 msgid "Run taskmgr"
-msgstr "Kjør taskmgr"
+msgstr "taskmgr ausführen"
 
 #: src/data/compat/Wine.vala:55
 msgid "InnoSetup default options"
-msgstr "Forvalgte valg for InnoSetup"
+msgstr "Standardoptionen für InnoSetup"
 
 #: src/data/compat/Wine.vala:59
 msgid "Silent installation"
-msgstr "Stille installasjon"
+msgstr "Stille Installation"
 
 #: src/data/compat/Wine.vala:60
 msgid "Very silent installation"
-msgstr "Veldig stille installasjon"
+msgstr "Sehr stille Instalation"
 
 #: src/data/compat/Wine.vala:61
 msgid "Suppress messages"
-msgstr "Undertrykk meldinger"
+msgstr "Nachrichten unterdrücken"
 
 #: src/data/compat/Wine.vala:62
 msgid "No GUI"
-msgstr "Inget grensesnitt"
+msgstr "Kein GUI"
 
 #: src/data/compat/DOSBox.vala:52
 msgid "Windowed"
-msgstr "Vindusvisning"
+msgstr "Fenstermodus"
 
 #: src/data/compat/DOSBox.vala:52
 msgid "Disable fullscreen"
-msgstr "Skru av fullskjermsvisning"
+msgstr "Fullscreen deaktivieren"
 
 #: src/data/compat/RetroArch.vala:51
 msgid "Libretro core file"
-msgstr "Libretro-kjernefil"
+msgstr "Libretro Kerndatei"
 
 #: src/data/compat/CustomEmulator.vala:43
 msgid "Custom emulator"
-msgstr "Egendefinert emulator"
+msgstr "Benutzerdefinierter Emulator"
 
 #: src/data/compat/CustomEmulator.vala:48
 msgid "Emulator"
@@ -237,38 +238,38 @@ msgstr "Emulator"
 
 #: src/data/compat/CustomEmulator.vala:49
 msgid "Launch in game directory"
-msgstr "Kjør i spillmappe"
+msgstr "Starte im Spielverzeichnis"
 
 #: src/ui/dialogs/SettingsDialog/SettingsDialog.vala:37
 #: src/ui/views/WelcomeView.vala:52 src/ui/views/WelcomeView.vala:76
 #: src/ui/views/GamesView/GamesView.vala:220
 #: src/ui/views/GamesView/GamesView.vala:674
 msgid "Settings"
-msgstr "Innstillinger"
+msgstr "Einstellungen"
 
 #: src/ui/dialogs/SettingsDialog/SettingsDialog.vala:54
 msgid "Some settings will be applied after application restart"
-msgstr "Noen innstillinger vil tre i kraft etter omstart av programmet"
+msgstr "Einige Einstellungen werden nach dem Neustart übernommen"
 
 #: src/ui/dialogs/SettingsDialog/SettingsDialog.vala:68
 msgid "Interface"
-msgstr "Grensesnitt"
+msgstr "Schnittstelle"
 
 #: src/ui/dialogs/SettingsDialog/SettingsDialog.vala:69
 msgid "Collection"
-msgstr "Samling"
+msgstr "Sammlung"
 
 #: src/ui/dialogs/SettingsDialog/SettingsDialog.vala:74
 msgid "Emulators"
-msgstr "Emulatorer"
+msgstr "Emulatoren"
 
 #: src/ui/dialogs/SettingsDialog/SettingsDialogTab.vala:181
 msgid "Open"
-msgstr "Åpne"
+msgstr "Öffnen"
 
 #: src/ui/dialogs/SettingsDialog/SettingsDialogTab.vala:188
 msgid "Clear"
-msgstr "Tøm"
+msgstr "Leeren"
 
 #: src/ui/dialogs/SettingsDialog/SettingsDialogTab.vala:204
 #, c-format
@@ -279,117 +280,120 @@ msgstr[1] ""
 
 #: src/ui/dialogs/SettingsDialog/tabs/UI.vala:36
 msgid "Use dark theme"
-msgstr "Bruk mørk drakt"
+msgstr "Dunklen Modus verwenden"
 
 #: src/ui/dialogs/SettingsDialog/tabs/UI.vala:37
 msgid "Compact list"
-msgstr "Kompakt liste"
+msgstr "Kompakte Liste"
 
 #: src/ui/dialogs/SettingsDialog/tabs/UI.vala:38
 msgid "Show platform icons in grid view"
-msgstr "Vis plattformsikoner i rutenettvisning"
+msgstr "Plattformsymbole in der Gitteransicht anzeigen"
 
 #: src/ui/dialogs/SettingsDialog/tabs/UI.vala:42
 msgid "Merge games from different sources"
-msgstr "Flett spill fra forskjellige kilder"
+msgstr "Spiele aus verschiedenen Quellen zusammenführen"
 
 #: src/ui/dialogs/SettingsDialog/tabs/UI.vala:46
 msgid "Show non-native games"
-msgstr "Vis spill som ikke er lokale for plattformen"
+msgstr "Nicht native Spiele anzeigen"
 
 #: src/ui/dialogs/SettingsDialog/tabs/UI.vala:47
 msgid "Use compatibility layers and consider Windows games compatible"
-msgstr "Bruk kompabilitetslag og anse Windows-spill som kompatible"
+msgstr ""
+"Verwenden Sie Kompatibilitätsebenen und betrachten Sie Windows-Spiele als "
+"kompatibel"
 
 #: src/ui/dialogs/SettingsDialog/tabs/UI.vala:51
 msgid "Use imported tags"
-msgstr "Bruk importerte etiketter"
+msgstr "Importierte Tags verwenden"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Collection.vala:50
 #: src/ui/dialogs/SettingsDialog/tabs/Collection.vala:69
 msgid "Collection directory"
-msgstr "Samlingsmappe"
+msgstr "Sammelverzeichnis"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Collection.vala:55
 #: src/ui/dialogs/SettingsDialog/tabs/Collection.vala:63
 #: src/ui/dialogs/SettingsDialog/tabs/Collection.vala:71
 msgid "Game directory"
-msgstr "Spillmappe"
+msgstr "Spielverzeichnis"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Collection.vala:56
 #: src/ui/dialogs/SettingsDialog/tabs/Collection.vala:64
 msgid "Installers"
-msgstr "Installasjonskandidater"
+msgstr "Installer"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Collection.vala:57
 #: src/ui/views/GameDetailsView/blocks/GOGDetails.vala:116
 msgid "DLC"
-msgstr "Nedlastbart innhold"
+msgstr "DLC"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Collection.vala:58
 #: src/ui/views/GameDetailsView/blocks/GOGDetails.vala:89
 msgid "Bonus content"
-msgstr "Bonusinnhold"
+msgstr "Bonusinhalte"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Collection.vala:68
 msgid "Variables"
-msgstr "Variabler"
+msgstr "Variablen"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Collection.vala:70
 msgid "Game name"
-msgstr "Spillnavn"
+msgstr "Spielname"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Steam.vala:41
 #: src/ui/dialogs/SettingsDialog/tabs/GOG.vala:42
 #: src/ui/dialogs/SettingsDialog/tabs/Humble.vala:42
 msgid "Enabled"
-msgstr "Påskrudd"
+msgstr "Aktiviert"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Steam.vala:46
 msgid "Steam API keys have limited number of uses per day"
-msgstr "API-nøkler fra Steam kan brukes kun et par ganger om dagen"
+msgstr ""
+"Steam API-Schlüssel haben eine begrenzte Anzahl von Anwendungen pro Tag"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Steam.vala:46
 msgid "Generate key"
-msgstr "Generer nøkkel"
+msgstr "Schlüssel generieren"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Steam.vala:49
 msgid "Installation directory"
-msgstr "Installasjonsmappe"
+msgstr "Installationsverzeichnis"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Steam.vala:66
 msgid "Default"
-msgstr "Forvalg"
+msgstr "Standard"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Steam.vala:74
 msgid "Restore default API key"
-msgstr "Gjenopprett forvalgt API-nøkkel"
+msgstr "Standard-API-Schlüssel wiederherstellen"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Steam.vala:85
 msgid "Steam API key"
-msgstr "API-nøkkel fra Steam"
+msgstr "Steam API-Schlüssel"
 
 #: src/ui/dialogs/SettingsDialog/tabs/GOG.vala:46
 #: src/ui/dialogs/SettingsDialog/tabs/Humble.vala:49
 msgid "Games directory"
-msgstr "Spillmappe"
+msgstr "Spieleverzeichnis"
 
 #: src/ui/dialogs/SettingsDialog/tabs/GOG.vala:52
 #: src/ui/dialogs/SettingsDialog/tabs/Humble.vala:55
 msgid "Logout"
-msgstr "Logg ut"
+msgstr "Abmeldung"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Humble.vala:46
 msgid "Load games from Humble Trove"
-msgstr "Last inn spill fra Humble-skattekisten"
+msgstr "Spiele aus Humble Trove laden"
 
 #: src/ui/dialogs/SettingsDialog/tabs/RetroArch.vala:36
 msgid "Libretro core directory"
-msgstr "Libretro-kjernemappe"
+msgstr "Libretro Kernverzeichnis"
 
 #: src/ui/dialogs/SettingsDialog/tabs/RetroArch.vala:37
 msgid "Libretro core info directory"
-msgstr "Libretro-kjerneinfomappe"
+msgstr "Libretro Kern-Infoverzeichnis"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Emulators.vala:194
 #: src/ui/dialogs/SettingsDialog/tabs/Emulators.vala:226
@@ -400,86 +404,86 @@ msgstr "Libretro-kjerneinfomappe"
 #: src/ui/views/GamesView/AddGamePopover.vala:76
 #: src/ui/views/GamesView/AddGamePopover.vala:121
 msgid "Executable"
-msgstr "Kjørbar fil"
+msgstr "Ausführbare Datei"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Emulators.vala:195
 #: src/ui/dialogs/SettingsDialog/tabs/Emulators.vala:319
 #: src/ui/views/GamesView/AddGamePopover.vala:67
 #: src/ui/views/GamesView/AddGamePopover.vala:121
 msgid "Installer"
-msgstr "Installasjonskandidat"
+msgstr "Installer"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Emulators.vala:200
 msgid "Save"
-msgstr "Lagre"
+msgstr "Speichern"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Emulators.vala:212
 #: src/ui/dialogs/GamePropertiesDialog.vala:130
 #: src/ui/dialogs/GamePropertiesDialog.vala:135
 #: src/ui/views/GamesView/AddGamePopover.vala:72
 msgid "Name"
-msgstr "Navn"
+msgstr "Name"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Emulators.vala:228
 #: src/ui/dialogs/GamePropertiesDialog.vala:238
 #: src/ui/views/GamesView/AddGamePopover.vala:77
 msgid "Arguments"
-msgstr "Argumenter"
+msgstr "Argumente"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Emulators.vala:240
 #: src/ui/views/GamesView/AddGamePopover.vala:81
 msgid "Directory"
-msgstr "Mappe"
+msgstr "Verzeichnis"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Emulators.vala:240
 msgid "Select emulator directory"
-msgstr "Velg emulatormappe"
+msgstr "Emulatorverzeichnis auswählen"
 
 #: src/ui/dialogs/SettingsDialog/tabs/Emulators.vala:277
 #: src/ui/dialogs/GamePropertiesDialog.vala:256
 msgid "Force compatibility mode"
-msgstr "Tving gjennom kompabilitetsmodus"
+msgstr "Kompatibilitätsmodus erzwingen"
 
 #: src/ui/dialogs/InstallDialog.vala:53 src/ui/dialogs/InstallDialog.vala:199
 #: src/ui/views/GamesView/GameContextMenu.vala:49
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:208
 msgid "Install"
-msgstr "Installer"
+msgstr "Installieren"
 
 #: src/ui/dialogs/InstallDialog.vala:147
 msgid "Select installer"
-msgstr "Velg installasjonskandidat"
+msgstr "Installationsprogramm auswählen"
 
 #: src/ui/dialogs/InstallDialog.vala:152
 #, c-format
 msgid "Installer size: %s"
-msgstr "Installasjonsstørrelse: %s"
+msgstr "Größe des Installers: %s"
 
 #: src/ui/dialogs/InstallDialog.vala:197
 msgid "Import"
-msgstr "Importer"
+msgstr "Importieren"
 
 #: src/ui/dialogs/InstallDialog.vala:203
 msgid "Download only"
-msgstr "Kun last ned"
+msgstr "Nur Herunterladen"
 
 #: src/ui/dialogs/InstallDialog.vala:278
 msgid "Unknown"
-msgstr "Ukjent"
+msgstr "Unbekannt"
 
 #: src/ui/dialogs/GamePropertiesDialog.vala:51
 #, c-format
 msgid "%s: Properties"
-msgstr "%s: Egenskaper"
+msgstr "%s: Eigenschaften"
 
 #: src/ui/dialogs/GamePropertiesDialog.vala:66
 #: src/ui/views/GamesView/FiltersPopover.vala:153
 msgid "Tags"
-msgstr "Etiketter"
+msgstr "Tags"
 
 #: src/ui/dialogs/GamePropertiesDialog.vala:111
 msgid "Add tag"
-msgstr "Legg til etikett"
+msgstr "Tag hinzufügen"
 
 #: src/ui/dialogs/GamePropertiesDialog.vala:149
 msgid "Images"
@@ -487,28 +491,28 @@ msgstr "Bilder"
 
 #: src/ui/dialogs/GamePropertiesDialog.vala:183
 msgid "Image URL"
-msgstr "Bildenettadresse"
+msgstr "Bild-URL"
 
 #: src/ui/dialogs/GamePropertiesDialog.vala:187
 msgid "Icon URL"
-msgstr "Ikonnettadresse"
+msgstr "Icon-URL"
 
 #: src/ui/dialogs/GamePropertiesDialog.vala:195
 msgid "Search images:"
-msgstr "Søk etter bilder:"
+msgstr "Bilder suchen:"
 
 #: src/ui/dialogs/GamePropertiesDialog.vala:251
 msgid "Compatibility"
-msgstr "Kompabilitet"
+msgstr "Kompatibilität"
 
 #: src/ui/dialogs/GameFSOverlaysDialog.vala:52
 #, c-format
 msgid "%s: Overlays"
-msgstr "%s: Overlag"
+msgstr "%s: Overlays"
 
 #: src/ui/dialogs/GameFSOverlaysDialog.vala:68
 msgid "Overlays are disabled"
-msgstr "Overlag er avskrudd"
+msgstr "Overlays sind deaktiviert"
 
 #: src/ui/dialogs/GameFSOverlaysDialog.vala:68
 msgid ""
@@ -516,141 +520,143 @@ msgid ""
 "\n"
 "Enabling will move game to the “base“ overlay"
 msgstr ""
-"Skru på overlegg for å behandle nedlastbart innhold og mod-er\n"
+"Aktivieren von Overlays zur Verwaltung von DLCs und Mods\n"
 "\n"
-"Å skru dette på vil flytte spillet til \"base\"-overlegget"
+"Durch das Aktivieren wird das Spiel auf das \"base\"-Overlay verschoben"
 
 #: src/ui/dialogs/GameFSOverlaysDialog.vala:71
 #: src/ui/views/GamesView/GameContextMenu.vala:64
 msgid "Overlays"
-msgstr "Overlag"
+msgstr "Overlays"
 
 #: src/ui/dialogs/GameFSOverlaysDialog.vala:99
 msgid "Overlay ID (directory name)"
-msgstr "Overlags-ID (mappenavn)"
+msgstr "Overlay-ID (Verzeichnisname)"
 
 #: src/ui/dialogs/GameFSOverlaysDialog.vala:104
 msgid "Overlay name (optional)"
-msgstr "Overlagsnavn (valgfritt)"
+msgstr "Overlay-Name (optional)"
 
 #: src/ui/dialogs/GameFSOverlaysDialog.vala:106
 msgid "Add"
-msgstr "Legg til"
+msgstr "Hinzufügen"
 
 #: src/ui/dialogs/GameFSOverlaysDialog.vala:121
 msgid "Enable overlays"
-msgstr "Skru på overlag"
+msgstr "Overlays aktivieren"
 
 #: src/ui/dialogs/GameFSOverlaysDialog.vala:211
 msgid "Open directory"
-msgstr "Åpne mappe"
+msgstr "Verzeichnis öffnen"
 
 #: src/ui/dialogs/CompatRunDialog.vala:48
 #: src/ui/views/GamesView/GameContextMenu.vala:45
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:210
 msgid "Run with compatibility layer"
-msgstr "Kjør med kompabilitetslag"
+msgstr "Mit Kompatibilitätsschicht ausführen"
 
 #: src/ui/views/WelcomeView.vala:51
 msgid "No enabled game sources"
-msgstr "Ingen påskrudde spillkilder"
+msgstr "Keine aktivierten Spielquellen"
 
 #: src/ui/views/WelcomeView.vala:51
 msgid "Enable some game sources in settings"
-msgstr "Skru på noen spillkilder i innstillingene"
+msgstr "Einige Spielquellen in den Einstellungen aktivieren"
 
 #: src/ui/views/WelcomeView.vala:56
 msgid "All your games in one place"
-msgstr "Alle dine spill på ett sted"
+msgstr "Alle Ihre Spiele an einem Ort"
 
 #: src/ui/views/WelcomeView.vala:56
 msgid "Let's get started"
-msgstr "La oss komme igang"
+msgstr "Fangen wir an"
 
 #: src/ui/views/WelcomeView.vala:70
 msgid "Skip"
-msgstr "Hopp over"
+msgstr "Überspringen"
 
 #: src/ui/views/WelcomeView.vala:134
 msgid "Ready"
-msgstr "Klar"
+msgstr "Bereit"
 
 #: src/ui/views/WelcomeView.vala:140
 msgid "Authentication required"
-msgstr "Identitetsbekreftelse kreves"
+msgstr "Authentifizierung erforderlich"
 
 #: src/ui/views/WelcomeView.vala:145
 msgid "Authenticating..."
-msgstr "Identitetsbekrefter…"
+msgstr "Authentifizierung..."
 
 #: src/ui/views/WelcomeView.vala:156
 #, c-format
 msgid "Install %s"
-msgstr "Installer %s"
+msgstr "%s installieren"
 
 #: src/ui/views/WelcomeView.vala:157
 msgid "Return to GameHub after installing"
-msgstr "Gå tilbake til GameHub etter installasjon"
+msgstr "Zurück zu GameHub nach der Installation"
 
 #: src/ui/views/GamesView/GamesView.vala:106
 msgid "No games"
-msgstr "Ingen spill"
+msgstr "Keine Spiele"
 
 #: src/ui/views/GamesView/GamesView.vala:106
 msgid "Get some games or enable some game sources in settings"
-msgstr "Hent noen spill eller skru på noen spillkilder i innstillingene"
+msgstr ""
+"Holen Sie sich einige Spiele oder aktivieren Sie einige Spiel-Quellen in den "
+"Einstellungen"
 
 #: src/ui/views/GamesView/GamesView.vala:107
 msgid "Reload"
-msgstr "Gjeninnlast"
+msgstr "Neu laden"
 
 #: src/ui/views/GamesView/GamesView.vala:155
 msgid "Grid view"
-msgstr "Rutenettvisning"
+msgstr "Rasteransicht"
 
 #: src/ui/views/GamesView/GamesView.vala:156
 msgid "List view"
-msgstr "Listevisning"
+msgstr "Listenansicht"
 
 #: src/ui/views/GamesView/GamesView.vala:166
 msgid "All games"
-msgstr "Alle spill"
+msgstr "Alle Spiele"
 
 #: src/ui/views/GamesView/GamesView.vala:177
 msgid "Downloads"
-msgstr "Nedlastinger"
+msgstr "Downloads"
 
 #: src/ui/views/GamesView/GamesView.vala:201
 msgid "Filters"
-msgstr "Filtre"
+msgstr "Filter"
 
 #: src/ui/views/GamesView/GamesView.vala:208
 #: src/ui/views/GamesView/AddGamePopover.vala:83
 msgid "Add game"
-msgstr "Legg til spill"
+msgstr "Spiel hinzufügen"
 
 #: src/ui/views/GamesView/GamesView.vala:215
 msgid "Search"
-msgstr "Søk"
+msgstr "Suche"
 
 #: src/ui/views/GamesView/GamesView.vala:266
 msgctxt "status_header"
 msgid "Favorites"
-msgstr "Favoritter"
+msgstr "Favoriten"
 
 #: src/ui/views/GamesView/GamesView.vala:350
 msgid "Menu"
-msgstr "Meny"
+msgstr "Menü"
 
 #: src/ui/views/GamesView/GamesView.vala:351
 #: src/ui/views/GameDetailsView/GameDetailsView.vala:79
 msgid "Back"
-msgstr "Tilbake"
+msgstr "Zurück"
 
 #: src/ui/views/GamesView/GamesView.vala:492
 #, c-format
 msgid "Loading games from %s"
-msgstr "Laster spill fra %s"
+msgstr "Laden von Spielen aus %s"
 
 #: src/ui/views/GamesView/GamesView.vala:521
 #, c-format
@@ -661,176 +667,176 @@ msgstr[1] ""
 
 #: src/ui/views/GamesView/GamesView.vala:536
 msgid "No user-added games"
-msgstr "Ingen brukertillagte spill"
+msgstr "Keine vom Benutzer hinzugefügten Spiele"
 
 #: src/ui/views/GamesView/GamesView.vala:537
 msgid "Add some games using plus button"
-msgstr "Legg till noen spill med pluss-knappen"
+msgstr "Einige Spiele mit der Plus-Taste hinzufügen"
 
 #: src/ui/views/GamesView/GamesView.vala:541
 #, c-format
 msgid "No %s games"
-msgstr "Ingen %s-spill"
+msgstr "Keine %s Spiele"
 
 #: src/ui/views/GamesView/GamesView.vala:542
 msgid "Get some Linux-compatible games"
-msgstr "Hent noen Linux-kompatible spill"
+msgstr "Holen Sie sich einige Linux-kompatible Spiele"
 
 #: src/ui/views/GamesView/GamesView.vala:563
 #, c-format
 msgid "No games matching “%s”"
-msgstr "Ingen spill samsvarer med \"%s\""
+msgstr "Keine Spiele entsprechen \"%s\""
 
 #: src/ui/views/GamesView/GamesView.vala:568
 #, c-format
 msgid "No %1$s games matching “%2$s”"
-msgstr "Ingen %1$s-spill samsvarer med \"%2$s\""
+msgstr "Keine %1$s Spiele entsprechen \"%2$s\""
 
 #: src/ui/views/GamesView/GamesView.vala:672
 msgid ""
 "No games were loaded from Steam. Set your games list privacy to public or "
 "use your own Steam API key in settings."
 msgstr ""
-"Ingen spill ble innlastet fra Steam. Sett ditt spilllistepersonvern til "
-"\"offentlig\" for å bruke din egen Steam-API-nøkkel i innstillingene."
+"Es wurden keine Spiele von Steam geladen. Stelle deine Spieleliste auf "
+"öffentlich oder verwende deinen eigenen Steam API-Schlüssel"
 
 #: src/ui/views/GamesView/GamesView.vala:673
 msgid "Privacy"
-msgstr "Personvern"
+msgstr "Datenschutz"
 
 #: src/ui/views/GamesView/GamesView.vala:892
 msgid "Updating game info"
-msgstr "Oppdaterer spillinfo"
+msgstr "Aktualisieren von Spielinformationen"
 
 #: src/ui/views/GamesView/GamesView.vala:898
 #, c-format
 msgid "Updating %s game info"
-msgstr "Oppdaterer %s spillinfo"
+msgstr "Aktualisierung von %s Spielinformationen"
 
 #: src/ui/views/GamesView/GamesView.vala:916
 msgid "Merging games"
-msgstr "Fletter spill"
+msgstr "Zusammenführung von Spielen"
 
 #: src/ui/views/GamesView/GamesView.vala:932
 #, c-format
 msgid "Merging games from %s"
-msgstr "Fletter spill fra %s"
+msgstr "Zusammenführen von Spielen aus %s"
 
 #: src/ui/views/GamesView/GamesView.vala:949
 #, c-format
 msgid "Merging %s (%s)"
-msgstr "Fletter %s (%s)"
+msgstr "Zusammenführen von %s und (%s)"
 
 #: src/ui/views/GamesView/DownloadProgressView.vala:124
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:148
 msgid "Pause download"
-msgstr "Pause nedlasting"
+msgstr "Download anhalten"
 
 #: src/ui/views/GamesView/DownloadProgressView.vala:129
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:154
 msgid "Resume download"
-msgstr "Fortsett nedlasting"
+msgstr "Download fortsetzen"
 
 #: src/ui/views/GamesView/DownloadProgressView.vala:134
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:160
 msgid "Cancel download"
-msgstr "Avbryt nedlasting"
+msgstr "Download abbrechen"
 
 #: src/ui/views/GamesView/FiltersPopover.vala:68
 msgid "Sort:"
-msgstr "Sortering:"
+msgstr "Sortieren:"
 
 #: src/ui/views/GamesView/AddGamePopover.vala:76
 msgid "Select game executable"
-msgstr "Velg kjørbar spillfil"
+msgstr "Ausführbare Spiel-Datei auswählen"
 
 #: src/ui/views/GamesView/AddGamePopover.vala:81
 msgid "Select game directory"
-msgstr "Velg spillmappe"
+msgstr "Spielverzeichnis auswählen"
 
 #: src/ui/views/GamesView/GameContextMenu.vala:53
 msgid "Details"
-msgstr "Detaljer"
+msgstr "Details"
 
 #: src/ui/views/GamesView/GameContextMenu.vala:56
 msgctxt "game_context_menu"
 msgid "Favorite"
-msgstr "Favoritt"
+msgstr "Favorit"
 
 #: src/ui/views/GamesView/GameContextMenu.vala:60
 msgctxt "game_context_menu"
 msgid "Hidden"
-msgstr "Skjult"
+msgstr "Versteckt"
 
 #: src/ui/views/GamesView/GameContextMenu.vala:67
 msgid "Properties"
-msgstr "Egenskaper"
+msgstr "Eigenschaften"
 
 #: src/ui/views/GamesView/GameContextMenu.vala:103
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:211
 msgid "Open installation directory"
-msgstr "Åpne installasjonsmappe"
+msgstr "Installationsverzeichnis öffnen"
 
 #: src/ui/views/GamesView/GameContextMenu.vala:111
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:212
 msgid "Open installers collection directory"
-msgstr "Åpne installasjonskandidatssamlingsmappe"
+msgstr "Öffne Sammelverzeichnis des Installers"
 
 #: src/ui/views/GamesView/GameContextMenu.vala:119
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:213
 msgid "Open bonus collection directory"
-msgstr "Åpne bonussamlingsmappe"
+msgstr "Bonus-Sammlungsverzeichnis öffnen"
 
 #: src/ui/views/GamesView/GameContextMenu.vala:126
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:215
 msgid "Remove"
-msgstr "Fjern"
+msgstr "Entfernen"
 
 #: src/ui/views/GamesView/GameContextMenu.vala:126
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:215
 msgid "Uninstall"
-msgstr "Avinstaller"
+msgstr "Deinstallieren"
 
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:214
 msgid "Open store page"
-msgstr "Åpne butikkside"
+msgstr "Shop-Seite öffnen"
 
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:216
 msgid "Game properties"
-msgstr "Spillegenskaper"
+msgstr "Spieleigenschaften"
 
 #: src/ui/views/GameDetailsView/blocks/Achievements.vala:55
 msgid "Achievements"
-msgstr "Prestasjoner"
+msgstr "Erfolge"
 
 #: src/ui/views/GameDetailsView/blocks/Achievements.vala:103
 #, c-format
 msgid "Unlocked: %s"
-msgstr "Opplåst: %s"
+msgstr "Freigeschaltet: %s"
 
 #: src/ui/views/GameDetailsView/blocks/Achievements.vala:108
 #, c-format
 msgid "Global percentage: %g%%"
-msgstr "Global prosentsats: %g%%"
+msgstr "Globaler Prozentsatz: %g%%%%%"
 
 #: src/ui/views/GameDetailsView/blocks/Playtime.vala:47
 #: src/ui/views/GameDetailsView/blocks/Playtime.vala:61
 msgid "Playtime"
-msgstr "Spilltid"
+msgstr "Spielzeit"
 
 #: src/ui/views/GameDetailsView/blocks/Playtime.vala:53
 msgid "Playtime (local)"
-msgstr "Spilltid (lokal)"
+msgstr "Spielzeit (lokal)"
 
 #: src/ui/views/GameDetailsView/blocks/Playtime.vala:70
 msgid "Last launch"
-msgstr "Sist kjørt"
+msgstr "Letzter Start"
 
 #: src/ui/views/GameDetailsView/blocks/Playtime.vala:82
 #, c-format
 msgctxt "time"
 msgid "%dh"
-msgstr "%dt"
+msgstr "%dh"
 
 #: src/ui/views/GameDetailsView/blocks/Playtime.vala:82
 #, c-format
@@ -840,92 +846,92 @@ msgstr "%dm"
 
 #: src/ui/views/GameDetailsView/blocks/Description.vala:49
 msgid "Description"
-msgstr "Beskrivelse"
+msgstr "Beschreibung"
 
 #: src/ui/views/GameDetailsView/blocks/GOGDetails.vala:65
 #: src/ui/views/GameDetailsView/blocks/SteamDetails.vala:89
 msgid "Language"
-msgstr "Språk"
+msgstr "Sprache"
 
 #: src/ui/views/GameDetailsView/blocks/GOGDetails.vala:68
 #: src/ui/views/GameDetailsView/blocks/SteamDetails.vala:92
 msgid "Languages"
-msgstr "Språk"
+msgstr "Sprachen"
 
 #: src/ui/views/GameDetailsView/blocks/SteamDetails.vala:59
 msgid "Category"
-msgstr "Kategori"
+msgstr "Kategorie"
 
 #: src/ui/views/GameDetailsView/blocks/SteamDetails.vala:62
 msgid "Categories"
-msgstr "Kategorier"
+msgstr "Kategorien"
 
 #: src/ui/views/GameDetailsView/blocks/SteamDetails.vala:77
 msgid "Genre"
-msgstr "Sjanger"
+msgstr "Genre"
 
 #: src/ui/views/GameDetailsView/blocks/SteamDetails.vala:80
 msgid "Genres"
-msgstr "Sjangre"
+msgstr "Genres"
 
 #: src/ui/widgets/FileChooserEntry.vala:47
 #: src/ui/widgets/FileChooserEntry.vala:53
 #: src/ui/widgets/FileChooserEntry.vala:55
 msgid "Select file"
-msgstr "Velg fil"
+msgstr "Datei auswählen"
 
 #: src/ui/widgets/CompatToolPicker.vala:51
 msgid "Compatibility layer:"
-msgstr "Kompabilitetslag:"
+msgstr "Kompatibilitätsschicht:"
 
 #: src/utils/Settings.vala:43
 msgctxt "sort_mode"
 msgid "By name"
-msgstr "Etter navn"
+msgstr "Nach Name"
 
 #: src/utils/Settings.vala:44
 msgctxt "sort_mode"
 msgid "By last launch"
-msgstr "Etter siste kjøring"
+msgstr "Nach letztem Start"
 
 #: src/utils/Settings.vala:45
 msgctxt "sort_mode"
 msgid "By playtime"
-msgstr "Etter spilltid"
+msgstr "Nach Spielzeit"
 
 #: src/utils/downloader/Downloader.vala:155
 msgctxt "dl_status"
 msgid "Starting download"
-msgstr "Starter nedlasting"
+msgstr "Download wird gestartet"
 
 #: src/utils/downloader/Downloader.vala:156
 msgctxt "dl_status"
 msgid "Download started"
-msgstr "Nedlasting startet"
+msgstr "Download gestartet"
 
 #: src/utils/downloader/Downloader.vala:157
 msgctxt "dl_status"
 msgid "Download finished"
-msgstr "Nedlasting fullført"
+msgstr "Download abgeschlossen"
 
 #: src/utils/downloader/Downloader.vala:158
 msgctxt "dl_status"
 msgid "Download failed"
-msgstr "Nedlasting mislyktes"
+msgstr "Download fehlgeschlagen"
 
 #: src/utils/downloader/Downloader.vala:160
 #, c-format
 msgctxt "dl_status"
 msgid "Downloading: %d%% (%s / %s)"
-msgstr "Laster ned: %d%% (%s / %s)"
+msgstr "Herunterladen: %d%%% (%s / %s)"
 
 #: src/utils/downloader/Downloader.vala:162
 #, c-format
 msgctxt "dl_status"
 msgid "Paused: %d%% (%s / %s)"
-msgstr "Pauset: %d%% (%s / %s)"
+msgstr "Angehalten: %d%%% (%s / %s)"
 
 #: src/utils/downloader/Downloader.vala:164
 msgctxt "dl_status"
 msgid "Download cancelled"
-msgstr "Nedlasting avbrutt"
+msgstr "Download abgebrochen"
