@@ -111,6 +111,7 @@ sources = [
 	'utils/FSOverlay.vala',
 	'utils/Parser.vala',
 	'utils/Settings.vala',
+	'utils/BinaryVDF.vala',
 
 	'utils/downloader/Downloader.vala',
 	'utils/downloader/SoupDownloader.vala'
