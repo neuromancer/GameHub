@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.tkashkin.gamehub\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-07 09:40+0300\n"
+"POT-Creation-Date: 2018-12-16 03:36+0300\n"
 "PO-Revision-Date: 2018-11-24 17:10+0000\n"
 "Last-Translator: ditokp <ditokpl@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/gamehub/"
@@ -20,17 +20,17 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 3.3-dev\n"
 
-#: src/app.vala:134
+#: src/app.vala:148
 #, fuzzy
 msgid "Run game"
 msgstr "Jalankan taskmgr"
 
-#: src/app.vala:135
+#: src/app.vala:149
 #, fuzzy
 msgid "Show compatibility options dialog"
 msgstr "Paksakan mode pengguna yang ada"
 
-#: src/app.vala:136
+#: src/app.vala:150
 msgid "Show main window"
 msgstr ""
 
@@ -57,10 +57,30 @@ msgstr "Batal"
 msgid "Select directory"
 msgstr "Pilih direktori"
 
-#: src/data/Runnable.vala:359
+#: src/data/Runnable.vala:361
 #, c-format
 msgid "Part %u of %u: "
 msgstr "Bagian %u dari %u: "
+
+#: src/data/Runnable.vala:383
+#, fuzzy, c-format
+msgid "%s: corrupted installer"
+msgstr "Tidak terpasang"
+
+#: src/data/Runnable.vala:384
+#, c-format
+msgid "Checksum mismatch in %s"
+msgstr ""
+
+#: src/data/Runnable.vala:398 src/ui/views/GamesView/GameContextMenu.vala:126
+#: src/ui/views/GameDetailsView/GameDetailsPage.vala:215
+msgid "Remove"
+msgstr "Hapus"
+
+#: src/data/Runnable.vala:399
+#, fuzzy
+msgid "Backup"
+msgstr "Kembali"
 
 #: src/data/Game.vala:465
 msgctxt "status"
@@ -78,31 +98,37 @@ msgid "Installing"
 msgstr "Memasang"
 
 #: src/data/Game.vala:470
+#, fuzzy
+msgctxt "status"
+msgid "Verifying installer integrity"
+msgstr "Pemasangan sangat senyap"
+
+#: src/data/Game.vala:471
 msgctxt "status"
 msgid "Download started"
 msgstr "Mengunduh dimulai"
 
-#: src/data/Game.vala:472
+#: src/data/Game.vala:473
 msgctxt "status"
 msgid "Not installed"
 msgstr "Tidak terpasang"
 
-#: src/data/Game.vala:482
+#: src/data/Game.vala:483
 msgctxt "status_header"
 msgid "Installed"
 msgstr "Terpasang"
 
-#: src/data/Game.vala:483
+#: src/data/Game.vala:484
 msgctxt "status_header"
 msgid "Installing"
 msgstr "Memasang"
 
-#: src/data/Game.vala:484
+#: src/data/Game.vala:486
 msgctxt "status_header"
 msgid "Downloading"
 msgstr "Mengunduh"
 
-#: src/data/Game.vala:486
+#: src/data/Game.vala:488
 msgctxt "status_header"
 msgid "Not installed"
 msgstr "Tidak terpasang"
@@ -156,7 +182,7 @@ msgstr "Sunting skrip"
 msgid "Edit custom script"
 msgstr "Sunting skrip ubahan"
 
-#: src/data/compat/WineWrap.vala:59
+#: src/data/compat/WineWrap.vala:58
 #: src/ui/dialogs/SettingsDialog/tabs/Emulators.vala:206
 #: src/ui/dialogs/CompatRunDialog.vala:100
 #: src/ui/views/GamesView/GameContextMenu.vala:42
@@ -164,11 +190,11 @@ msgstr "Sunting skrip ubahan"
 msgid "Run"
 msgstr "Jalankan"
 
-#: src/data/compat/WineWrap.vala:62
+#: src/data/compat/WineWrap.vala:61
 msgid "Show WineWrap menu"
 msgstr ""
 
-#: src/data/compat/WineWrap.vala:65 src/data/compat/Proton.vala:80
+#: src/data/compat/WineWrap.vala:64 src/data/compat/Proton.vala:80
 #: src/data/compat/Wine.vala:80
 msgid "Kill apps in prefix"
 msgstr ""
@@ -812,11 +838,6 @@ msgstr ""
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:213
 msgid "Open bonus collection directory"
 msgstr "Buka direktori koleksi bonus"
-
-#: src/ui/views/GamesView/GameContextMenu.vala:126
-#: src/ui/views/GameDetailsView/GameDetailsPage.vala:215
-msgid "Remove"
-msgstr "Hapus"
 
 #: src/ui/views/GamesView/GameContextMenu.vala:126
 #: src/ui/views/GameDetailsView/GameDetailsPage.vala:215
