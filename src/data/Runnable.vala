@@ -27,7 +27,24 @@ namespace GameHub.Data
 	public abstract class Runnable: Object
 	{
 		public string id { get; protected set; }
-		public string name { get; set; }
+
+		private string _name;
+		public string escaped_name { get; set; }
+		public string normalized_name { get; set; }
+
+		public string name
+		{
+			get
+			{
+				return _name;
+			}
+			set
+			{
+				_name = value;
+				escaped_name = Utils.strip_name(_name.replace(" ", "_"), "_.,");
+				normalized_name = Utils.strip_name(_name, null, true);
+			}
+		}
 
 		public string? compat_tool { get; set; }
 		public string? compat_tool_settings { get; set; }
@@ -533,15 +550,18 @@ namespace GameHub.Data
 									{
 										runnable.executable = action.file;
 										runnable.arguments = action.args;
+										break;
 									}
 								}
 							}
 						}
 
-						if(runnable.executable == null || !runnable.executable.query_exists())
-						{
-							runnable.choose_executable();
-						}
+						runnable.update_status();
+					}
+
+					if(runnable.executable == null || !runnable.executable.query_exists())
+					{
+						runnable.choose_executable();
 					}
 
 					if(game != null && version != null)

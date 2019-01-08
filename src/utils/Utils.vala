@@ -298,6 +298,20 @@ namespace GameHub.Utils
 		image.queue_draw();
 	}
 
+	public static string get_relative_datetime(GLib.DateTime date_time)
+	{
+		var schema_source = SettingsSchemaSource.get_default();
+		if(schema_source != null)
+		{
+			var schema = schema_source.lookup("io.elementary.desktop.wingpanel.datetime", true);
+			if(schema != null)
+			{
+				return Granite.DateTime.get_relative_datetime(date_time);
+			}
+		}
+		return date_time.format("%x %R");
+	}
+
 	public static void notify(string title, string? body=null, NotificationPriority priority=NotificationPriority.NORMAL, NotificationConfigureDelegate? config=null)
 	{
 		var notification = new Notification(title);
@@ -311,11 +325,15 @@ namespace GameHub.Utils
 	}
 
 	private const string NAME_CHARS_TO_STRIP = "!@#$%^&*()-_+=:~`;?'\"<>,./\\|’“”„«»™℠®©";
-	public static string strip_name(string name, string? keep=null)
+	public static string strip_name(string name, string? keep=null, bool move_the=false)
 	{
 		if(name == null) return name;
 		var n = name.strip();
-		if(n == "") return n;
+		if(n.length == 0) return n;
+		if(move_the && n.down().has_prefix("the "))
+		{
+			n = n.substring(4) + ", The";
+		}
 		unichar c;
 		for(int i = 0; NAME_CHARS_TO_STRIP.get_next_char(ref i, out c);)
 		{
